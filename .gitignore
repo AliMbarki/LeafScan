@@ -1,0 +1,14 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+# datasets and runtime data (re-creatable via scripts/)
+data/raw/
+data/processed/
+data/app/
+data/real_test/*
+!data/real_test/README.md
+# training checkpoints (final weights in models/ ARE committed)
+runs/
+*.ckpt

@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "dataset": "BrandonFors/Plant-Diseases-PlantVillage-Dataset (Hugging Face, CC0-1.0)",
+  "classes": [
+    {"id": 0, "key": "pepper_bacterial_spot", "plant": "Pepper", "condition": "Bacterial spot", "healthy": false, "source_label": "Pepper,_bell___Bacterial_spot"},
+    {"id": 1, "key": "pepper_healthy", "plant": "Pepper", "condition": "Healthy", "healthy": true, "source_label": "Pepper,_bell___healthy"},
+    {"id": 2, "key": "potato_early_blight", "plant": "Potato", "condition": "Early blight", "healthy": false, "source_label": "Potato___Early_blight"},
+    {"id": 3, "key": "potato_late_blight", "plant": "Potato", "condition": "Late blight", "healthy": false, "source_label": "Potato___Late_blight"},
+    {"id": 4, "key": "potato_healthy", "plant": "Potato", "condition": "Healthy", "healthy": true, "source_label": "Potato___healthy"},
+    {"id": 5, "key": "tomato_bacterial_spot", "plant": "Tomato", "condition": "Bacterial spot", "healthy": false, "source_label": "Tomato___Bacterial_spot"},
+    {"id": 6, "key": "tomato_early_blight", "plant": "Tomato", "condition": "Early blight", "healthy": false, "source_label": "Tomato___Early_blight"},
+    {"id": 7, "key": "tomato_late_blight", "plant": "Tomato", "condition": "Late blight", "healthy": false, "source_label": "Tomato___Late_blight"},
+    {"id": 8, "key": "tomato_healthy", "plant": "Tomato", "condition": "Healthy", "healthy": true, "source_label": "Tomato___healthy"}
+  ]
+}

@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "leafscan"
+version = "0.1.0"
+description = "Desktop plant-disease scanner (PySide6 + PyTorch MobileNetV3-Small)"
+requires-python = ">=3.11"
+dependencies = [
+  "PySide6>=6.6",
+  "opencv-python>=4.8",
+  "numpy>=1.26",
+  "matplotlib>=3.8",
+]
+
+[project.optional-dependencies]
+ml = ["torch>=2.2", "torchvision>=0.17", "pyarrow>=14", "pillow>=10", "scikit-learn>=1.3"]
+dev = ["pytest>=8", "pytest-qt>=4.4"]
+
+[project.scripts]
+leafscan = "app.main:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+app = ["labels.json", "guidance/*.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+qt_api = "pyside6"
