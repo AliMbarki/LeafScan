@@ -20,7 +20,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from app.contracts import StoredScan
+from app.contracts import StoredScan, format_confidence
 from app.labels import get_labels
 from app.storage.db import SqliteScanStore
 from app.ui.charts import ConditionsPerPlantChart, ScansOverTimeChart
@@ -66,7 +66,7 @@ class ScanDetailDialog(QDialog):
         lay.addWidget(label(labels.display_name(scan.prediction), "H2"))
         lay.addWidget(
             label(
-                f"{scan.plant_name}  |  {scan.timestamp:%Y-%m-%d %H:%M}  |  confidence {scan.confidence:.0%}"
+                f"{scan.plant_name}  |  {scan.timestamp:%Y-%m-%d %H:%M}  |  confidence {format_confidence(scan.confidence)}"
                 f"  |  model {scan.model_version}",
                 "Muted",
             )
@@ -208,7 +208,7 @@ class HistoryView(QWidget):
             self.table.setItem(row, 1, QTableWidgetItem(f"{s.timestamp:%Y-%m-%d  %H:%M}"))
             self.table.setItem(row, 2, QTableWidgetItem(s.plant_name))
             self.table.setItem(row, 3, QTableWidgetItem(self.labels.display_name(s.prediction)))
-            conf = QTableWidgetItem(f"{s.confidence:.0%}")
+            conf = QTableWidgetItem(format_confidence(s.confidence))
             conf.setTextAlignment(Qt.AlignRight | Qt.AlignVCenter)
             self.table.setItem(row, 4, conf)
             self.table.setItem(row, 5, QTableWidgetItem(s.model_version))

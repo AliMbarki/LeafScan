@@ -15,7 +15,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from app.contracts import AnalysisResult, Guidance
+from app.contracts import AnalysisResult, Guidance, format_confidence
 from app.labels import get_labels
 from app.ui.qt_utils import card, label, set_prop
 
@@ -240,11 +240,12 @@ class ResultPanel(QWidget):
             return
 
         self.conf_row.show()
-        self.conf_value.setText(f"{c.confidence:.0%}")
+        self.conf_value.setText(format_confidence(c.confidence))
         self.conf_bar.setValue(round(c.confidence * 100))
         others = [p for p in c.top_k if p.class_id != c.class_id][:2] if not c.is_uncertain else list(c.top_k[:3])
+        others = [p for p in others if p.probability >= 0.02]  # 0% alternatives are noise
         prefix = "Best guesses: " if c.is_uncertain else "Also possible: "
-        self.alternatives.setText(prefix + ", ".join(f"{p.name} ({p.probability:.0%})" for p in others) if others else "")
+        self.alternatives.setText(prefix + ", ".join(f"{p.name} ({format_confidence(p.probability)})" for p in others) if others else "")
 
         if c.is_uncertain:
             self._set_chip("Not sure", "warn")

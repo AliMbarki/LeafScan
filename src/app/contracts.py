@@ -27,6 +27,15 @@ Mask = NDArray[np.bool_]
 DEFAULT_UNCERTAINTY_THRESHOLD = 0.60
 
 
+def format_confidence(p: float) -> str:
+    """Never display a model probability as a certainty: 0.9996 -> '>99%', not '100%'."""
+    if p >= 0.995:
+        return ">99%"
+    if 0 < p < 0.005:
+        return "<1%"
+    return f"{p:.0%}"
+
+
 class InvalidImageError(ValueError):
     """Raised when an image is not a usable RGB uint8 array."""
 
@@ -279,7 +288,7 @@ class MockOverlayRenderer:
         if not leaf.found or result is None:
             text = "No leaf detected"
         else:
-            text = f"{result.disease_name} {result.confidence:.0%}"
+            text = f"{result.disease_name} {format_confidence(result.confidence)}"
         x, y = (leaf.bbox[0], leaf.bbox[1]) if leaf.bbox else (10, 10)
         scale = max(0.5, image.shape[1] / 1400)
         (tw, th), base = cv2.getTextSize(text, cv2.FONT_HERSHEY_SIMPLEX, scale, 2)

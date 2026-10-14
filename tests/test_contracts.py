@@ -71,3 +71,13 @@ def test_mock_detector_matches_input_geometry(leaf_image):
     assert r.found
     assert r.mask.shape == leaf_image.shape[:2] and r.mask.dtype == bool
     assert r.annotated_image.shape == leaf_image.shape
+
+
+def test_format_confidence_never_claims_certainty():
+    from app.contracts import format_confidence
+
+    assert format_confidence(0.9996) == ">99%"
+    assert format_confidence(0.987) == "99%"
+    assert format_confidence(0.55) == "55%"
+    assert format_confidence(0.001) == "<1%"
+    assert format_confidence(0.0) == "0%"

@@ -9,7 +9,7 @@ import cv2
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 
-from app.contracts import ClassifierResult, LeafResult, RGBImage
+from app.contracts import ClassifierResult, LeafResult, RGBImage, format_confidence
 from app.labels import Labels, get_labels
 
 HEALTHY = (62, 207, 142)
@@ -43,10 +43,10 @@ class LeafOverlayRenderer:
         if not leaf.found or result is None:
             return "No leaf detected", NEUTRAL
         if result.is_uncertain:
-            return f"Not sure ({result.confidence:.0%})", UNSURE
+            return f"Not sure ({format_confidence(result.confidence)})", UNSURE
         info = self.labels.by_key(result.class_key)
         color = HEALTHY if info and info.healthy else DISEASE
-        return f"{result.disease_name}  {result.confidence:.0%}", color
+        return f"{result.disease_name}  {format_confidence(result.confidence)}", color
 
     def render(self, image: RGBImage, leaf: LeafResult, result: ClassifierResult | None) -> RGBImage:
         h, w = image.shape[:2]
