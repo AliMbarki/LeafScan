@@ -27,6 +27,10 @@ DISCLAIMER = (
 SEVERITY_TONE = {"none": "ok", "low": "ok", "moderate": "warn", "high": "danger", "info": "muted"}
 
 
+def _tone(p: float) -> str:
+    return "ok" if p >= 0.85 else "warn"
+
+
 def _bullets(items: tuple[str, ...]) -> str:
     return "".join(f"<li style='margin-bottom:3px'>{html.escape(i)}</li>" for i in items)
 
@@ -66,6 +70,34 @@ class GuidanceCard(QWidget):
             )
             parts.append(f"<p style='margin-bottom:2px'><b>Sources</b></p><p style='margin-top:0'>{links}</p>")
         self.body.setText("".join(parts))
+
+
+class Meter(QWidget):
+    """Caption + value + thin bar, e.g. 'Plant  >99%'."""
+
+    def __init__(self, caption: str, parent: QWidget | None = None) -> None:
+        super().__init__(parent)
+        lay = QVBoxLayout(self)
+        lay.setContentsMargins(0, 0, 0, 0)
+        lay.setSpacing(3)
+        head = QHBoxLayout()
+        self.caption = label(caption, "Caption")
+        head.addWidget(self.caption)
+        head.addStretch(1)
+        self.value = label("", "H3")
+        head.addWidget(self.value)
+        lay.addLayout(head)
+        self.bar = QProgressBar()
+        self.bar.setRange(0, 100)
+        self.bar.setTextVisible(False)
+        self.bar.setFixedHeight(8)
+        lay.addWidget(self.bar)
+
+    def set(self, caption: str, p: float, tone: str) -> None:
+        self.caption.setText(caption)
+        self.value.setText(format_confidence(p))
+        self.bar.setValue(round(p * 100))
+        set_prop(self.bar, "tone", tone)
 
 
 class ResultPanel(QWidget):
@@ -109,18 +141,11 @@ class ResultPanel(QWidget):
         self.conf_row = QWidget()
         cr = QVBoxLayout(self.conf_row)
         cr.setContentsMargins(0, 6, 0, 0)
-        cr.setSpacing(4)
-        crh = QHBoxLayout()
-        crh.addWidget(label("Confidence", "Caption"))
-        crh.addStretch(1)
-        self.conf_value = label("", "H3")
-        crh.addWidget(self.conf_value)
-        cr.addLayout(crh)
-        self.conf_bar = QProgressBar()
-        self.conf_bar.setRange(0, 100)
-        self.conf_bar.setTextVisible(False)
-        self.conf_bar.setFixedHeight(8)
-        cr.addWidget(self.conf_bar)
+        cr.setSpacing(8)
+        self.plant_meter = Meter("Plant")
+        self.cond_meter = Meter("Condition")
+        cr.addWidget(self.plant_meter)
+        cr.addWidget(self.cond_meter)
         self.alternatives = label("", "Caption", wrap=True)
         cr.addWidget(self.alternatives)
         lay.addWidget(self.conf_row)
@@ -128,6 +153,9 @@ class ResultPanel(QWidget):
         self.disc_label = label("", "Caption", wrap=True)
         self.disc_label.hide()
         lay.addWidget(self.disc_label)
+        self.scene_hint = label("", "Caption", wrap=True)
+        self.scene_hint.hide()
+        lay.addWidget(self.scene_hint)
         self.highlight = QCheckBox("Highlight discoloration")
         self.highlight.setToolTip("Tint off-colour areas inside the leaf (yellowing, spots, lesions)")
         self.highlight.toggled.connect(self.highlight_toggled)
@@ -183,6 +211,7 @@ class ResultPanel(QWidget):
 
     def show_idle(self) -> None:
         self.disc_label.hide()
+        self.scene_hint.hide()
         self._result = None
         self._set_chip("Ready", "muted")
         self.title.setText("Scan a leaf")
@@ -195,6 +224,7 @@ class ResultPanel(QWidget):
 
     def show_busy(self) -> None:
         self.disc_label.hide()
+        self.scene_hint.hide()
         self._set_chip("Analyzing", "muted")
         self.title.setText("Analyzing...")
         self.subtitle.setText("Finding the leaf and classifying it.")
@@ -205,6 +235,7 @@ class ResultPanel(QWidget):
 
     def show_error(self, message: str) -> None:
         self.disc_label.hide()
+        self.scene_hint.hide()
         self._result = None
         self._set_chip("Error", "danger")
         self.title.setText("Something went wrong")
@@ -229,38 +260,60 @@ class ResultPanel(QWidget):
         else:
             self.disc_label.hide()
         c = result.classification
+        hint = leaf.message if leaf.found and leaf.method != "isolated" else ""
+        self.scene_hint.setText(hint)
+        self.scene_hint.setVisible(bool(hint))
         if c is None:
             self._set_chip("No leaf", "warn")
             self.title.setText("No leaf detected")
             self.subtitle.setText(
-                result.leaf.message or "Place a single leaf in the frame against a plain, contrasting background."
+                result.leaf.message or "Hold one leaf in the middle of the frame, ideally against a plain background."
             )
             self.conf_row.hide()
             self.guidance.hide()
             return
 
         self.conf_row.show()
-        self.conf_value.setText(format_confidence(c.confidence))
-        self.conf_bar.setValue(round(c.confidence * 100))
         others = [p for p in c.top_k if p.class_id != c.class_id][:2] if not c.is_uncertain else list(c.top_k[:3])
         others = [p for p in others if p.probability >= 0.02]  # 0% alternatives are noise
         prefix = "Best guesses: " if c.is_uncertain else "Also possible: "
-        self.alternatives.setText(prefix + ", ".join(f"{p.name} ({format_confidence(p.probability)})" for p in others) if others else "")
+        self.alternatives.setText(
+            prefix + ", ".join(f"{p.name} ({format_confidence(p.probability)})" for p in others) if others else ""
+        )
 
-        if c.is_uncertain:
+        n_plants = len(self.labels.plants)
+        if c.unknown_plant:
+            self._set_chip(c.disease_name, "warn")
+            self.title.setText(c.disease_name)
+            self.subtitle.setText(f"This does not look like any of the {n_plants} plants LeafScan knows "
+                                  "(see Supported plants), so no condition is given.")
+            self.plant_meter.set("Not a known plant", c.plant_confidence, "warn")
+            self.cond_meter.hide()
+        elif c.plant is None:
             self._set_chip("Not sure", "warn")
-            set_prop(self.conf_bar, "tone", "warn")
             self.title.setText("Not sure")
-            self.subtitle.setText(
-                "The model isn't confident enough to name a condition. Try a sharper photo of a single leaf in even light."
-            )
+            self.subtitle.setText("Could not tell which plant this is. Fill the frame with one leaf, in even light, "
+                                  "and keep it sharp.")
+            self.plant_meter.set("Plant", c.plant_confidence, "warn")
+            self.cond_meter.hide()
+        elif c.is_uncertain:
+            self._set_chip("Not sure", "warn")
+            self.title.setText(c.plant)
+            self.subtitle.setText(f"{c.plant} leaf identified, but the condition is unclear. "
+                                  "Try a closer, sharper photo of the affected area.")
+            self.plant_meter.set(f"Plant: {c.plant}", c.plant_confidence, _tone(c.plant_confidence))
+            self.cond_meter.set("Condition: not sure", c.confidence, "warn")
+            self.cond_meter.show()
         else:
             info = self.labels.by_key(c.class_key)
             healthy = bool(info and info.healthy)
+            condition = info.condition if info else c.disease_name
             self._set_chip("Looks healthy" if healthy else "Possible disease", "ok" if healthy else "danger")
-            set_prop(self.conf_bar, "tone", "ok" if c.confidence >= 0.85 else "warn")
-            self.title.setText(info.condition if info else c.disease_name)
-            self.subtitle.setText(f"{info.plant} leaf" if info else "")
+            self.title.setText(condition)
+            self.subtitle.setText(f"{c.plant} leaf")
+            self.plant_meter.set(f"Plant: {c.plant}", c.plant_confidence, _tone(c.plant_confidence))
+            self.cond_meter.set(f"Condition: {condition}", c.confidence, _tone(c.confidence))
+            self.cond_meter.show()
 
         if result.guidance is not None:
             self.guidance.set_guidance(result.guidance)

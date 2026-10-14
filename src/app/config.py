@@ -23,6 +23,7 @@ class Settings:
     uncertainty_threshold: float = field(
         default_factory=lambda: float(os.environ.get("LEAFSCAN_THRESHOLD", DEFAULT_UNCERTAINTY_THRESHOLD))
     )
+    plant_threshold: float = field(default_factory=lambda: float(os.environ.get("LEAFSCAN_PLANT_THRESHOLD", 0.55)))
     camera_index: int = 0
     use_camera: bool = True
     use_mocks: bool = False

@@ -1,8 +1,11 @@
 """History charts (matplotlib embedded in Qt), themed for dark/light.
 
 Colour rules: status colours (good / warning / critical) encode scan state in the
-time chart; the condition chart uses categorical slots in a fixed order derived from
-labels.json, so a condition always keeps its colour regardless of filters.
+time chart. The condition chart has dozens of possible conditions, more than a palette can
+separate, so: Healthy is always green, "Not sure / unknown" always grey, the six most
+frequent diseases in the WHOLE history get categorical colours, and the rest fold into
+"Other conditions". Ranking uses the unfiltered history, so filtering by plant never
+repaints a condition.
 """
 from __future__ import annotations
 
@@ -27,7 +30,9 @@ CATEGORICAL = {
     "dark": ["#3987e5", "#d95926", "#199e70", "#c98500", "#d55181", "#008300", "#9085e9", "#e66767"],
 }
 STATUS = {"good": "#0ca30c", "warning": "#fab219", "critical": "#d03b3b"}
-OTHER = "Other"
+OTHER = "Other conditions"
+HEALTHY = "Healthy"
+DISEASE_SLOTS = (0, 1, 3, 4, 6, 7)  # categorical slots for diseases (slot 5, green, is reserved for Healthy)
 DAYS = 30
 
 
@@ -38,17 +43,23 @@ def status_of(key: str, labels: Labels) -> str:
     return "good" if info.healthy else "critical"
 
 
-def condition_order(labels: Labels) -> list[str]:
-    seen: list[str] = []
-    for c in labels:
-        if c.condition not in seen:
-            seen.append(c.condition)
-    return seen + [UNCERTAIN_NAME]
-
-
 def condition_of(key: str, labels: Labels) -> str:
     info = labels.by_key(key)
-    return info.condition if info else UNCERTAIN_NAME
+    if info is None or info.unknown:
+        return UNCERTAIN_NAME
+    return HEALTHY if info.healthy else info.condition
+
+
+def condition_order(labels: Labels, global_counts: dict[str, int] | None = None) -> list[str]:
+    """Legend order: Healthy, the most frequent diseases (by whole-history count), Other, Not sure."""
+    totals: dict[str, int] = {}
+    for key, n in (global_counts or {}).items():
+        cond = condition_of(key, labels)
+        totals[cond] = totals.get(cond, 0) + n
+    diseases = sorted({c.condition for c in labels if not c.healthy and not c.unknown},
+                      key=lambda c: (-totals.get(c, 0), c))
+    top = [d for d in diseases if totals.get(d, 0) > 0][: len(DISEASE_SLOTS)]
+    return [HEALTHY, *top, OTHER, UNCERTAIN_NAME]
 
 
 class _Chart(FigureCanvasQTAgg):
@@ -148,15 +159,21 @@ class ScansOverTimeChart(_Chart):
 class ConditionsPerPlantChart(_Chart):
     """Per plant: how many scans showed each condition (stacked horizontal bars)."""
 
-    def update_data(self, by_plant: dict[str, dict[str, int]], labels: Labels, t: Theme) -> None:
+    def update_data(self, by_plant: dict[str, dict[str, int]], labels: Labels, t: Theme,
+                    global_counts: dict[str, int] | None = None) -> None:
         if not by_plant:
             self._empty(t, "No scans yet")
             return
-        order = condition_order(labels)
-        if len(order) > 8:  # never generate a 9th hue: fold the tail into "Other"
-            order = order[:7] + [OTHER]
+        if global_counts is None:
+            global_counts = {}
+            for preds in by_plant.values():
+                for k, n in preds.items():
+                    global_counts[k] = global_counts.get(k, 0) + n
+        order = condition_order(labels, global_counts)
         palette = CATEGORICAL["dark" if t.name == "dark" else "light"]
-        color = {c: palette[i] for i, c in enumerate(order)}
+        color = {HEALTHY: palette[5], OTHER: t.muted, UNCERTAIN_NAME: "#9aa5b1" if t.name == "dark" else "#b8c0c8"}
+        for slot, cond in zip(DISEASE_SLOTS, order[1:-2]):
+            color[cond] = palette[slot]
         counts: dict[str, dict[str, int]] = {}
         for plant, preds in by_plant.items():
             agg: dict[str, int] = defaultdict(int)

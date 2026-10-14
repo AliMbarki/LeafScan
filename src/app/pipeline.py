@@ -50,7 +50,12 @@ class AnalysisPipeline:
         leaf = self.detector.detect_leaf(image)
         classification = None
         if leaf.found or not self.require_leaf:
-            classification = self.classifier.predict(crop_to_leaf(image, leaf))
+            crop = crop_to_leaf(image, leaf)
+            views = [crop, np.ascontiguousarray(crop[:, ::-1])]
+            if leaf.method != "isolated":
+                views.append(image)  # outline is less reliable on busy scenes: also look at the whole frame
+            predict_views = getattr(self.classifier, "predict_views", None)
+            classification = predict_views(views) if predict_views else self.classifier.predict(crop)
         overlay = self.overlay.render(image, leaf, classification)
         guidance = None
         if classification is not None and not classification.is_uncertain:

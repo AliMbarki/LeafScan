@@ -65,3 +65,27 @@ def test_history_queries(store):
     plants = {p.name: p for p in store.list_plants()}
     assert plants["A"].scan_count == 3
     assert [s.prediction for s in store.list_scans(a.id, limit=1)] == ["uncertain"]
+
+
+def test_v1_database_is_migrated(tmp_path):
+    import sqlite3
+
+    from app.storage.db import SqliteScanStore
+
+    db = tmp_path / "old.db"
+    con = sqlite3.connect(db)
+    con.executescript(
+        """CREATE TABLE plants (id INTEGER PRIMARY KEY, name TEXT NOT NULL UNIQUE COLLATE NOCASE, created_at TEXT NOT NULL);
+           CREATE TABLE scans (id INTEGER PRIMARY KEY, plant_id INTEGER NOT NULL, timestamp TEXT NOT NULL,
+             prediction TEXT NOT NULL, class_id INTEGER, confidence REAL NOT NULL, is_uncertain INTEGER NOT NULL,
+             model_version TEXT NOT NULL, image_path TEXT NOT NULL, overlay_path TEXT);
+           INSERT INTO plants VALUES (1, 'Old', '2026-01-01T00:00:00+00:00');
+           INSERT INTO scans VALUES (1, 1, '2026-01-02T00:00:00+00:00', 'uncertain', NULL, 0.3, 1, 'v1', 'a.png', NULL);"""
+    )
+    con.commit()
+    con.close()
+    s = SqliteScanStore(db)
+    assert s.list_scans()[0].species is None
+    p = s.get_or_create_plant("New")
+    s.save_scan(_record(p.id, datetime.now().astimezone()))
+    s.close()

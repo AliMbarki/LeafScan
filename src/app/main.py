@@ -30,8 +30,9 @@ def build_pipeline(settings: Settings) -> tuple[AnalysisPipeline, str]:
     try:
         from app.classify import MODEL_FILENAME, load_classifier
 
-        classifier = load_classifier(settings.models_dir / MODEL_FILENAME, settings.uncertainty_threshold)
-    except Exception as exc:  # noqa: BLE001 - ModelLoadError, ImportError (no torch), corrupt file...
+        classifier = load_classifier(settings.models_dir / MODEL_FILENAME, settings.uncertainty_threshold,
+                                     settings.plant_threshold)
+    except Exception as exc:  # noqa: BLE001 - ModelLoadError, missing onnxruntime, corrupt file...
         log.warning("classifier unavailable, using mock: %s", exc)
         classifier = MockClassifier(threshold=settings.uncertainty_threshold)
         warning = f"Model unavailable ({exc}). Using a MOCK classifier - predictions are fake."
@@ -74,7 +75,8 @@ def parse_args(argv: list[str] | None) -> argparse.Namespace:
     p.add_argument("--no-camera", action="store_true", help="do not open the webcam")
     p.add_argument("--camera", type=int, default=0, help="camera index (default 0)")
     p.add_argument("--data-dir", type=Path, help="where the history DB and images are stored")
-    p.add_argument("--threshold", type=float, help="confidence below this is reported as 'not sure'")
+    p.add_argument("--threshold", type=float, help="condition confidence below this is reported as 'not sure'")
+    p.add_argument("--plant-threshold", type=float, help="plant confidence below this is reported as 'not sure'")
     p.add_argument("--theme", choices=["dark", "light"])
     p.add_argument("--image", type=Path, help="analyse this image at startup")
     p.add_argument("--page", choices=["scan", "history"], default="scan")
@@ -96,6 +98,8 @@ def main(argv: list[str] | None = None) -> int:
         settings.data_dir = args.data_dir
     if args.threshold is not None:
         settings.uncertainty_threshold = args.threshold
+    if args.plant_threshold is not None:
+        settings.plant_threshold = args.plant_threshold
     settings.camera_index = args.camera
     settings.use_camera = not args.no_camera
     settings.use_mocks = args.mock

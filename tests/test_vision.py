@@ -98,6 +98,51 @@ def test_mostly_brown_diseased_leaf_is_found(det):
     assert mask_iou(r.mask, gt) > 0.85
 
 
+def _clutter(img, rng, n=40, avoid=None):
+    h, w = img.shape[:2]
+    palette = [(200, 60, 60), (40, 70, 160), (230, 230, 230), (30, 30, 30), (190, 150, 90), (150, 60, 150)]
+    for _ in range(n):
+        x, y = int(rng.integers(0, w)), int(rng.integers(0, h))
+        bw, bh = int(rng.integers(20, 120)), int(rng.integers(20, 120))
+        cv2.rectangle(img, (x, y), (x + bw, y + bh), palette[int(rng.integers(len(palette)))], -1)
+
+
+def test_leaf_on_cluttered_desk_is_found(det):
+    rng = np.random.default_rng(3)
+    img = np.full((480, 640, 3), (120, 110, 100), np.uint8)
+    _clutter(img, rng)
+    gt = np.zeros((480, 640), np.uint8)
+    cv2.ellipse(gt, (320, 240), (150, 100), 20, 0, 360, 255, -1)
+    img[gt > 0] = (60, 140, 50)
+    r = det.detect_leaf(img)
+    assert r.found, r.message
+    assert r.method in {"isolated", "center", "area"}
+    assert mask_iou(r.mask, gt > 0) > 0.75
+
+
+def test_leaf_held_in_hand_is_found(det):
+    img = np.full((480, 640, 3), (90, 95, 100), np.uint8)
+    cv2.rectangle(img, (280, 330), (380, 480), (214, 160, 130), -1)  # arm/hand from the bottom edge
+    gt = np.zeros((480, 640), np.uint8)
+    cv2.ellipse(gt, (330, 210), (120, 140), 0, 0, 360, 255, -1)
+    img[gt > 0] = (60, 140, 50)
+    r = det.detect_leaf(img)
+    assert r.found, r.message
+    assert mask_iou(r.mask, gt > 0) > 0.7
+
+
+def test_foliage_falls_back_to_main_green_area(det):
+    rng = np.random.default_rng(5)
+    img = np.full((480, 640, 3), (70, 55, 40), np.uint8)  # soil
+    for _ in range(25):
+        c = (int(rng.integers(0, 640)), int(rng.integers(0, 480)))
+        cv2.ellipse(img, c, (int(rng.integers(40, 90)), int(rng.integers(20, 45))), int(rng.integers(0, 180)), 0, 360,
+                    (int(rng.integers(40, 80)), int(rng.integers(110, 170)), int(rng.integers(30, 60))), -1)
+    r = det.detect_leaf(img)
+    assert r.found, r.message  # foliage must never be reported as "no leaf"
+    assert r.area_fraction > 0.1
+
+
 def test_leaf_filling_frame(det):
     img = np.full((480, 640, 3), (60, 140, 50), np.uint8)
     cv2.circle(img, (300, 240), 30, (120, 85, 40), -1)

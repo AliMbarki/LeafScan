@@ -42,6 +42,10 @@ class LeafOverlayRenderer:
     def _status(self, result: ClassifierResult | None, leaf: LeafResult) -> tuple[str, tuple[int, int, int]]:
         if not leaf.found or result is None:
             return "No leaf detected", NEUTRAL
+        if result.unknown_plant:
+            return result.disease_name, UNSURE
+        if result.plant is not None and result.is_uncertain:
+            return f"{result.plant} - not sure", UNSURE
         if result.is_uncertain:
             return f"Not sure ({format_confidence(result.confidence)})", UNSURE
         info = self.labels.by_key(result.class_key)

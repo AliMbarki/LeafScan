@@ -1,7 +1,4 @@
-"""Inference preprocessing, shared by the app predictor and the evaluation scripts.
-
-Pure numpy/OpenCV so the exact same pixels reach the network at eval and in the app.
-"""
+"""Inference preprocessing: resize shorter side, centre crop, normalise to CHW float32."""
 from __future__ import annotations
 
 import cv2
@@ -9,13 +6,8 @@ import numpy as np
 
 from app.contracts import RGBImage
 
-IMG_SIZE = 224
-RESIZE_TO = 256  # shorter side before the centre crop (crop ratio 0.875)
-MEAN = np.array([0.485, 0.456, 0.406], np.float32)  # ImageNet
-STD = np.array([0.229, 0.224, 0.225], np.float32)
 
-
-def resize_center_crop(image: RGBImage, resize_to: int = RESIZE_TO, size: int = IMG_SIZE) -> RGBImage:
+def resize_center_crop(image: RGBImage, resize_to: int = 256, size: int = 224) -> RGBImage:
     h, w = image.shape[:2]
     s = resize_to / min(h, w)
     nh, nw = max(size, round(h * s)), max(size, round(w * s))
@@ -25,12 +17,8 @@ def resize_center_crop(image: RGBImage, resize_to: int = RESIZE_TO, size: int = 
     return resized[y0 : y0 + size, x0 : x0 + size]
 
 
-def to_chw_normalized(image: RGBImage) -> np.ndarray:
-    x = image.astype(np.float32) / 255.0
-    x = (x - MEAN) / STD
+def preprocess(image: RGBImage, mean: np.ndarray, std: np.ndarray, resize_to: int = 256, size: int = 224) -> np.ndarray:
+    """RGB uint8 HxWx3 -> float32 3 x size x size, normalised with the model's mean/std."""
+    x = resize_center_crop(image, resize_to, size).astype(np.float32) / 255.0
+    x = (x - mean) / std
     return np.ascontiguousarray(x.transpose(2, 0, 1))
-
-
-def preprocess(image: RGBImage) -> np.ndarray:
-    """RGB uint8 HxWx3 -> float32 3x224x224, normalised."""
-    return to_chw_normalized(resize_center_crop(image))

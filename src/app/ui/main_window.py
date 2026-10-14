@@ -175,6 +175,12 @@ class MainWindow(QMainWindow):
             lay.addWidget(b)
         self.nav_group.button(0).setChecked(True)
         self.nav_group.idClicked.connect(self.show_page)
+        plants_btn = QPushButton("Supported plants")
+        plants_btn.setObjectName("NavButton")
+        plants_btn.setCursor(Qt.PointingHandCursor)
+        plants_btn.setToolTip("Which plants and conditions LeafScan knows")
+        plants_btn.clicked.connect(self.show_supported_plants)
+        lay.addWidget(plants_btn)
         lay.addStretch(1)
 
         self.camera_status = label("Camera: starting", "Caption", wrap=True)
@@ -188,6 +194,11 @@ class MainWindow(QMainWindow):
         self.theme_btn.clicked.connect(self.toggle_theme)
         lay.addWidget(self.theme_btn, 0, Qt.AlignLeft)
         return side
+
+    def show_supported_plants(self) -> None:
+        from app.ui.plants_dialog import SupportedPlantsDialog
+
+        SupportedPlantsDialog(parent=self).exec()
 
     def show_page(self, index: int) -> None:
         self.stack.setCurrentIndex(index)

@@ -9,7 +9,7 @@ from app.contracts import MockClassifier
 from app.main import build_pipeline
 
 ROOT = Path(__file__).resolve().parents[1]
-MODEL = ROOT / "models" / "leafscan_mnv3s.pt"
+MODEL = ROOT / "models" / "plant_disease.onnx"
 
 
 def test_missing_model_falls_back_to_mock_with_warning(tmp_path):
@@ -19,33 +19,35 @@ def test_missing_model_falls_back_to_mock_with_warning(tmp_path):
 
 
 def test_corrupt_model_falls_back(tmp_path):
-    pytest.importorskip("torch")
-    (tmp_path / "leafscan_mnv3s.pt").write_bytes(b"definitely not a checkpoint")
+    (tmp_path / "plant_disease.onnx").write_bytes(b"definitely not a model")
+    (tmp_path / "plant_disease.json").write_text((ROOT / "models" / "plant_disease.json").read_text())
     pipeline, warning = build_pipeline(Settings(data_dir=tmp_path, models_dir=tmp_path))
     assert isinstance(pipeline.classifier, MockClassifier) and warning
 
 
 def test_model_labels_mismatch_is_rejected(tmp_path):
-    pytest.importorskip("torch")
-    from app.classify.model import ModelLoadError, build_model, save_checkpoint
-    from app.classify.predictor import TorchClassifier
+    import json
+    import shutil
 
-    path = tmp_path / "m.pt"
-    save_checkpoint(path, build_model(3, pretrained=False), {"version": "x", "class_keys": ["a", "b", "c"]})
+    from app.classify.predictor import ModelLoadError, OnnxClassifier
+
+    shutil.copy(MODEL, tmp_path / "m.onnx")
+    meta = json.loads(MODEL.with_suffix(".json").read_text())
+    meta["num_classes"] = 3
+    (tmp_path / "m.json").write_text(json.dumps(meta))
     with pytest.raises(ModelLoadError, match="labels.json"):
-        TorchClassifier(path)
+        OnnxClassifier(tmp_path / "m.onnx")
 
 
-@pytest.mark.skipif(not MODEL.exists(), reason="trained model not present")
-def test_trained_model_contract(leaf_image):
-    from app.classify.predictor import TorchClassifier
+def test_model_contract(leaf_image):
+    from app.classify.predictor import OnnxClassifier
 
-    clf = TorchClassifier(MODEL)
+    clf = OnnxClassifier(MODEL)
     p = clf.probabilities(leaf_image)
-    assert p.shape == (9,) and abs(p.sum() - 1) < 1e-4
+    assert p.shape == (38,) and abs(p.sum() - 1) < 1e-4
     r = clf.predict(leaf_image)
     assert 0 <= r.confidence <= 1 and len(r.top_k) == 3
-    clf.threshold = 1.01  # nothing can be that confident -> always "not sure"
+    clf.threshold = clf.plant_threshold = 1.01  # nothing can be that confident -> always "not sure"
     r = clf.predict(leaf_image)
     assert r.is_uncertain and r.class_id is None
 

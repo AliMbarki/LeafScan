@@ -1,215 +1,798 @@
 {
-  "schema": 1,
-  "note": "General home-garden guidance written for LeafScan. Keys must match labels.json. Titles come from labels.json. Always check local extension advice and product labels.",
-  "classes": {
-    "pepper_bacterial_spot": {
-      "severity": "moderate",
-      "summary": "Bacterial spot is caused by Xanthomonas bacteria. It spreads in warm, wet weather through splashing water, handling wet plants, and infected seed or transplants. There is no cure for infected leaves; the goal is to slow the spread.",
-      "symptoms": [
-        "Small, dark, water-soaked spots on leaves that turn brown and may look angular",
-        "Spots sometimes have a yellow halo and can merge into larger dead patches",
-        "Yellowing and early leaf drop, which can leave fruit exposed to sunscald",
-        "Raised, rough, scab-like spots on fruit"
-      ],
-      "actions": [
-        "Remove badly spotted leaves and bag them; do not compost them",
-        "Avoid working among plants while the foliage is wet",
-        "Water at the base of the plant instead of overhead",
-        "Clean pruners and stakes with a disinfectant after handling affected plants",
-        "Copper-based sprays may slow the spread if started early; follow the product label and local rules"
-      ],
-      "prevention": [
-        "Use certified disease-free seed and healthy transplants",
-        "Choose resistant varieties where available",
-        "Rotate: avoid planting peppers or tomatoes in the same spot for 2-3 years",
-        "Remove plant debris at the end of the season"
-      ],
-      "sources": [
-        {"title": "Bacterial Spot of Pepper and Tomato", "publisher": "NC State Extension", "url": "https://content.ces.ncsu.edu/bacterial-spot-of-pepper-and-tomato"},
-        {"title": "Bacterial Spot - Peppers, Pest Management Guidelines", "publisher": "UC Statewide IPM Program", "url": "https://ipm.ucanr.edu/agriculture/peppers/bacterial-spot/"}
-      ]
-    },
-    "pepper_healthy": {
-      "severity": "none",
-      "summary": "No signs of the diseases this model knows about. Keep up good care and re-check regularly, including the undersides of leaves.",
-      "symptoms": [],
-      "actions": [
-        "Keep watering steady and at the base of the plant",
-        "Mulch to keep soil moisture even and reduce soil splash onto leaves",
-        "Check leaves weekly; early detection makes problems easier to manage"
-      ],
-      "prevention": [
-        "Give plants enough space for air to move between them",
-        "Rotate crop locations each year"
-      ],
-      "sources": [
-        {"title": "How to grow sweet peppers", "publisher": "RHS", "url": "https://www.rhs.org.uk/vegetables/peppers/grow-your-own"},
-        {"title": "Peppers - Pest Management Guidelines", "publisher": "UC Statewide IPM Program", "url": "https://ipm.ucanr.edu/agriculture/peppers/"}
-      ]
-    },
-    "potato_early_blight": {
-      "severity": "moderate",
-      "summary": "Early blight is a fungal disease (Alternaria) that usually starts on older, lower leaves and is worse on stressed plants in warm weather with heavy dew or rain. It weakens plants gradually rather than killing them quickly.",
-      "symptoms": [
-        "Dark brown spots with concentric rings, like a target, on older leaves",
-        "Spots often bordered by yellow tissue; affected leaves yellow and die",
-        "Damage moves upward through the plant over time",
-        "Tubers can develop dark, slightly sunken, dry lesions"
-      ],
-      "actions": [
-        "Remove heavily affected lower leaves and bag them",
-        "Water at the base, early in the day, so leaves dry quickly",
-        "Keep plants well fed and watered - stressed plants are more susceptible",
-        "Fungicides labelled for early blight can slow it; follow the label"
-      ],
-      "prevention": [
-        "Rotate: keep potatoes, tomatoes, peppers and eggplant out of the same bed for 2-3 years",
-        "Remove and destroy plant debris after harvest",
-        "Let tubers mature and handle them gently at harvest"
-      ],
-      "sources": [
-        {"title": "Early Blight - Potato, Pest Management Guidelines", "publisher": "UC Statewide IPM Program", "url": "https://ipm.ucanr.edu/agriculture/potato/early-blight/"}
-      ]
-    },
-    "potato_late_blight": {
-      "severity": "high",
-      "summary": "Late blight (Phytophthora infestans) spreads very quickly in cool, humid or wet weather and can destroy foliage within days. It also infects tubers and spreads to nearby tomatoes and potatoes, so act promptly.",
-      "symptoms": [
-        "Pale green to dark brown, water-soaked patches, often starting at leaf tips or edges",
-        "White, fuzzy growth on the underside of leaves in humid conditions",
-        "Dark lesions on stems; whole plants can collapse quickly",
-        "Tubers with reddish-brown, firm rot under the skin"
-      ],
-      "actions": [
-        "Remove and bag infected foliage or plants; do not compost them",
-        "Check nearby potatoes and tomatoes daily",
-        "If foliage is badly affected, remove it and wait before harvesting so tubers are less likely to be infected",
-        "Store only sound, undamaged tubers and check them during storage",
-        "Contact your local extension service - late blight outbreaks are often tracked regionally"
-      ],
-      "prevention": [
-        "Plant certified seed potatoes; never plant tubers saved from infected crops",
-        "Destroy volunteer potatoes and cull piles",
-        "Choose resistant varieties where available",
-        "Protective fungicides are used before infection in high-risk weather; follow the label"
-      ],
-      "sources": [
-        {"title": "Potato Late Blight", "publisher": "NC State Extension", "url": "https://content.ces.ncsu.edu/potato-late-blight"},
-        {"title": "Late Blight - Potato, Pest Management Guidelines", "publisher": "UC Statewide IPM Program", "url": "https://ipm.ucanr.edu/agriculture/potato/late-blight/"},
-        {"title": "Potato and tomato blight", "publisher": "RHS", "url": "https://www.rhs.org.uk/disease/potato-and-tomato-blight"}
-      ]
-    },
-    "potato_healthy": {
-      "severity": "none",
-      "summary": "No signs of the diseases this model knows about. Keep monitoring, especially during cool, wet spells when late blight can appear.",
-      "symptoms": [],
-      "actions": [
-        "Earth up (hill) soil around stems so tubers stay covered",
-        "Water evenly at the base of plants",
-        "Check leaves weekly, including undersides"
-      ],
-      "prevention": [
-        "Use certified seed potatoes",
-        "Rotate crop locations each year"
-      ],
-      "sources": [
-        {"title": "How to grow potatoes", "publisher": "RHS", "url": "https://www.rhs.org.uk/vegetables/potatoes/grow-your-own"},
-        {"title": "Potato - Pest Management Guidelines", "publisher": "UC Statewide IPM Program", "url": "https://ipm.ucanr.edu/agriculture/potato/"}
-      ]
-    },
-    "tomato_bacterial_spot": {
-      "severity": "moderate",
-      "summary": "Bacterial spot is caused by Xanthomonas bacteria and is favoured by warm, wet weather. It spreads by splashing water, handling wet plants and infected seed. Infected leaves cannot be cured; management focuses on slowing spread.",
-      "symptoms": [
-        "Small, dark, greasy-looking spots on leaves, often less than 3 mm across",
-        "Spots may have yellow halos and merge, causing leaves to yellow and drop",
-        "Small, raised, scabby spots on green fruit"
-      ],
-      "actions": [
-        "Remove badly affected leaves and bag them",
-        "Avoid overhead watering and don't handle plants when wet",
-        "Disinfect tools and stakes after use",
-        "Copper-based sprays may help slow spread if used early; follow the label"
-      ],
-      "prevention": [
-        "Start with disease-free seed and transplants",
-        "Rotate away from tomatoes and peppers for 2-3 years",
-        "Clear plant debris after the season"
-      ],
-      "sources": [
-        {"title": "Bacterial Spot of Pepper and Tomato", "publisher": "NC State Extension", "url": "https://content.ces.ncsu.edu/bacterial-spot-of-pepper-and-tomato"},
-        {"title": "Bacterial Spot - Tomato, Pest Management Guidelines", "publisher": "UC Statewide IPM Program", "url": "https://ipm.ucanr.edu/agriculture/tomato/bacterial-spot/"}
-      ]
-    },
-    "tomato_early_blight": {
-      "severity": "moderate",
-      "summary": "Early blight is a common fungal disease (Alternaria) that starts on the oldest leaves near the ground and moves upward. Warm, humid weather and soil splash help it spread.",
-      "symptoms": [
-        "Brown spots with concentric 'target' rings on lower, older leaves",
-        "Yellowing around the spots; affected leaves eventually die and drop",
-        "Dark lesions on stems, and leathery dark spots near the stem end of fruit"
-      ],
-      "actions": [
-        "Remove affected lower leaves and bag them",
-        "Mulch around plants to stop soil splashing onto leaves",
-        "Water at the base, ideally in the morning",
-        "Stake or cage plants and prune for air flow",
-        "Fungicides labelled for early blight can slow it; follow the label"
-      ],
-      "prevention": [
-        "Rotate tomatoes, potatoes, peppers and eggplant to a new bed for 2-3 years",
-        "Remove plant debris at season end",
-        "Choose tolerant varieties where available"
-      ],
-      "sources": [
-        {"title": "Early Blight of Tomato", "publisher": "NC State Extension", "url": "https://content.ces.ncsu.edu/early-blight-of-tomato"},
-        {"title": "Early Blight - Tomato, Pest Management Guidelines", "publisher": "UC Statewide IPM Program", "url": "https://ipm.ucanr.edu/agriculture/tomato/early-blight/"}
-      ]
-    },
-    "tomato_late_blight": {
-      "severity": "high",
-      "summary": "Late blight (Phytophthora infestans) can kill tomato plants within days in cool, wet or humid weather and spreads to nearby tomatoes and potatoes. Act quickly.",
-      "symptoms": [
-        "Large, irregular, pale green to dark brown, water-soaked patches on leaves",
-        "White fuzzy growth on leaf undersides when humid",
-        "Dark brown lesions on stems",
-        "Firm, greasy-looking brown patches on fruit"
-      ],
-      "actions": [
-        "Remove and bag infected plants or parts; do not compost them",
-        "Check neighbouring tomatoes and potatoes daily",
-        "Avoid wetting foliage when watering",
-        "Contact your local extension service - outbreaks are often tracked regionally"
-      ],
-      "prevention": [
-        "Buy healthy transplants and inspect them before planting",
-        "Choose late-blight-resistant varieties where available",
-        "Protective fungicides are used before infection in high-risk weather; follow the label"
-      ],
-      "sources": [
-        {"title": "Tomato Late Blight", "publisher": "NC State Extension", "url": "https://content.ces.ncsu.edu/tomato-late-blight"},
-        {"title": "Late Blight", "publisher": "Cornell Vegetables", "url": "https://www.vegetables.cornell.edu/pest-management/disease-factsheets/late-blight/"},
-        {"title": "Late Blight - Tomato, Pest Management Guidelines", "publisher": "UC Statewide IPM Program", "url": "https://ipm.ucanr.edu/agriculture/tomato/late-blight/"}
-      ]
-    },
-    "tomato_healthy": {
-      "severity": "none",
-      "summary": "No signs of the diseases this model knows about. Keep up good care and re-scan if new spots or yellowing appear.",
-      "symptoms": [],
-      "actions": [
-        "Water deeply and evenly at the base",
-        "Mulch to keep moisture even and reduce soil splash",
-        "Remove the lowest leaves that touch the soil",
-        "Check leaves weekly, including undersides"
-      ],
-      "prevention": [
-        "Stake or cage plants for air flow",
-        "Rotate crop locations each year"
-      ],
-      "sources": [
-        {"title": "How to grow tomatoes", "publisher": "RHS", "url": "https://www.rhs.org.uk/vegetables/tomatoes/grow-your-own"},
-        {"title": "Tomato - Home and Landscape", "publisher": "UC Statewide IPM Program", "url": "https://ipm.ucanr.edu/home-and-landscape/tomato/"}
-      ]
+ "schema": 2,
+ "note": "General home-garden guidance written for LeafScan. 'conditions' are shared cards (keyed by labels.json condition_id); 'classes' override fields for one class; 'plant_care' adds plant-specific care sources to Healthy results. Always check local extension advice and product labels.",
+ "conditions": {
+  "healthy": {
+   "severity": "none",
+   "summary": "No signs of the problems LeafScan knows for this plant. Keep up good care and re-check regularly, including the undersides of leaves.",
+   "actions": [
+    "Water steadily at the base of the plant",
+    "Check leaves weekly - problems are easier to manage early",
+    "Re-scan if spots, yellowing, curling or powdery patches appear"
+   ],
+   "prevention": [
+    "Give plants enough space and light",
+    "Keep the area free of weeds and plant debris"
+   ],
+   "sources": [
+    {
+     "title": "Home and Landscape pest and disease guides",
+     "publisher": "UC Statewide IPM Program",
+     "url": "https://ipm.ucanr.edu/home-and-landscape/"
     }
+   ]
+  },
+  "early_blight": {
+   "severity": "moderate",
+   "summary": "Early blight is a fungal disease (Alternaria) that starts on older, lower leaves and moves upward. Warm, humid weather and soil splash help it spread; it weakens plants gradually.",
+   "symptoms": [
+    "Brown spots with concentric 'target' rings on older leaves",
+    "Yellowing around the spots; affected leaves die and drop",
+    "Dark lesions on stems"
+   ],
+   "actions": [
+    "Remove badly affected leaves and bag them; do not compost them",
+    "Mulch to stop soil splashing onto leaves",
+    "Water at the base of the plant, early in the day, so leaves dry quickly",
+    "If you use a fungicide or pesticide, choose one labelled for this problem and plant, and follow the label"
+   ],
+   "prevention": [
+    "Rotate tomatoes, potatoes, peppers and eggplant to a new bed for 2-3 years",
+    "Clear fallen leaves and plant debris at the end of the season"
+   ],
+   "sources": [
+    {
+     "title": "Early Blight of Tomato",
+     "publisher": "NC State Extension",
+     "url": "https://content.ces.ncsu.edu/early-blight-of-tomato"
+    },
+    {
+     "title": "Early Blight - Tomato",
+     "publisher": "UC Statewide IPM Program",
+     "url": "https://ipm.ucanr.edu/agriculture/tomato/early-blight/"
+    }
+   ]
+  },
+  "late_blight": {
+   "severity": "high",
+   "summary": "Late blight (Phytophthora infestans) spreads very fast in cool, wet or humid weather and can kill plants within days. It spreads between tomatoes and potatoes, so act quickly.",
+   "symptoms": [
+    "Large pale-green to dark-brown water-soaked patches",
+    "White fuzzy growth on leaf undersides when humid",
+    "Dark lesions on stems"
+   ],
+   "actions": [
+    "Remove and bag infected plants or parts; do not compost them",
+    "Check nearby tomatoes and potatoes daily",
+    "Avoid wetting the foliage",
+    "Ask your local extension service or plant clinic to confirm before taking drastic action"
+   ],
+   "prevention": [
+    "Use healthy transplants and certified seed potatoes",
+    "Choose resistant varieties where available"
+   ],
+   "sources": [
+    {
+     "title": "Tomato Late Blight",
+     "publisher": "NC State Extension",
+     "url": "https://content.ces.ncsu.edu/tomato-late-blight"
+    },
+    {
+     "title": "Late Blight",
+     "publisher": "Cornell Vegetables",
+     "url": "https://www.vegetables.cornell.edu/pest-management/disease-factsheets/late-blight/"
+    },
+    {
+     "title": "Potato and tomato blight",
+     "publisher": "RHS",
+     "url": "https://www.rhs.org.uk/disease/potato-and-tomato-blight"
+    }
+   ]
+  },
+  "bacterial_spot": {
+   "severity": "moderate",
+   "summary": "Bacterial spot (Xanthomonas and related bacteria) spreads in warm, wet weather through splashing water, wet handling and infected seed or transplants. Infected leaves cannot be cured; the aim is to slow the spread.",
+   "symptoms": [
+    "Small dark, water-soaked spots that turn brown, often with a yellow halo",
+    "Spots can merge; leaves yellow and drop"
+   ],
+   "actions": [
+    "Remove badly affected leaves and bag them; do not compost them",
+    "Do not work among plants while they are wet",
+    "Water at the base of the plant, early in the day, so leaves dry quickly",
+    "Disinfect pruners and tools after working on affected plants",
+    "Copper-based sprays may slow spread if started early; follow the label"
+   ],
+   "prevention": [
+    "Start with disease-free seed and transplants",
+    "Rotate crops for 2-3 years",
+    "Clear fallen leaves and plant debris at the end of the season"
+   ],
+   "sources": [
+    {
+     "title": "Bacterial Spot of Pepper and Tomato",
+     "publisher": "NC State Extension",
+     "url": "https://content.ces.ncsu.edu/bacterial-spot-of-pepper-and-tomato"
+    }
+   ]
+  },
+  "leaf_mold": {
+   "severity": "moderate",
+   "summary": "Tomato leaf mould is a fungal disease of humid, poorly ventilated conditions, especially greenhouses and dense plantings.",
+   "symptoms": [
+    "Pale-yellow patches on the upper leaf surface",
+    "Olive-green to brown velvety mould underneath"
+   ],
+   "actions": [
+    "Improve ventilation and lower humidity",
+    "Remove badly affected leaves and bag them; do not compost them",
+    "Water at the base of the plant, early in the day, so leaves dry quickly"
+   ],
+   "prevention": [
+    "Space and prune plants so air moves freely around the leaves",
+    "Choose resistant varieties"
+   ],
+   "sources": [
+    {
+     "title": "Tomato leaf mould",
+     "publisher": "RHS",
+     "url": "https://www.rhs.org.uk/disease/tomato-leaf-mould"
+    }
+   ]
+  },
+  "septoria_leaf_spot": {
+   "severity": "moderate",
+   "summary": "Septoria leaf spot is a fungal disease that causes many small spots, starting on lower leaves, and can strip plants of foliage in wet weather.",
+   "symptoms": [
+    "Many small round spots with dark borders and light grey centres",
+    "Tiny dark dots in the spot centres",
+    "Lower leaves yellow and drop"
+   ],
+   "actions": [
+    "Remove badly affected leaves and bag them; do not compost them",
+    "Mulch to reduce soil splash",
+    "Water at the base of the plant, early in the day, so leaves dry quickly",
+    "If you use a fungicide or pesticide, choose one labelled for this problem and plant, and follow the label"
+   ],
+   "prevention": [
+    "Rotate crops",
+    "Clear fallen leaves and plant debris at the end of the season",
+    "Space and prune plants so air moves freely around the leaves"
+   ],
+   "sources": [
+    {
+     "title": "Septoria Leaf Spot of Tomato",
+     "publisher": "NC State Extension",
+     "url": "https://content.ces.ncsu.edu/septoria-leaf-spot-of-tomato"
+    }
+   ]
+  },
+  "spider_mites": {
+   "severity": "moderate",
+   "summary": "Spider mites are tiny sap-feeding pests that thrive in hot, dry, dusty conditions. Heavy infestations bronze and dry out leaves.",
+   "symptoms": [
+    "Fine pale speckling (stippling) on leaves",
+    "Fine webbing, especially on leaf undersides",
+    "Leaves turning bronze or yellow and drying"
+   ],
+   "actions": [
+    "Hose leaves (especially undersides) to knock mites off",
+    "Remove the worst affected leaves",
+    "Avoid broad-spectrum insecticides that kill the mites' natural enemies"
+   ],
+   "prevention": [
+    "Keep plants well watered; drought-stressed plants suffer most",
+    "Reduce dust around plants"
+   ],
+   "sources": [
+    {
+     "title": "Spider Mites",
+     "publisher": "UC Statewide IPM Program",
+     "url": "https://ipm.ucanr.edu/home-and-landscape/spider-mites/"
+    },
+    {
+     "title": "Glasshouse red spider mite",
+     "publisher": "RHS",
+     "url": "https://www.rhs.org.uk/biodiversity/glasshouse-red-spider-mite"
+    }
+   ]
+  },
+  "target_spot": {
+   "severity": "moderate",
+   "summary": "Target spot is a fungal leaf disease favoured by warm, wet weather and dense canopies.",
+   "symptoms": [
+    "Brown spots with faint concentric rings, often with a yellow edge",
+    "Spots can merge and leaves die"
+   ],
+   "actions": [
+    "Remove badly affected leaves and bag them; do not compost them",
+    "Water at the base of the plant, early in the day, so leaves dry quickly",
+    "Space and prune plants so air moves freely around the leaves",
+    "If you use a fungicide or pesticide, choose one labelled for this problem and plant, and follow the label"
+   ],
+   "prevention": [
+    "Rotate crops",
+    "Clear fallen leaves and plant debris at the end of the season"
+   ],
+   "sources": [
+    {
+     "title": "Tomato - Pest Management Guidelines",
+     "publisher": "UC Statewide IPM Program",
+     "url": "https://ipm.ucanr.edu/agriculture/tomato/"
+    }
+   ]
+  },
+  "leaf_curl_virus": {
+   "severity": "high",
+   "summary": "Leaf curl viruses (for example tomato yellow leaf curl and other begomoviruses) are spread by whiteflies. Infected plants cannot be cured.",
+   "symptoms": [
+    "Upward curling, crinkled or cupped leaves",
+    "Yellowing leaf edges, stunted growth",
+    "Poor flowering and fruit set"
+   ],
+   "actions": [
+    "Remove and bag infected plants to protect healthy ones",
+    "Control whiteflies (sticky traps, insect netting)",
+    "Ask your local extension service or plant clinic to confirm before taking drastic action"
+   ],
+   "prevention": [
+    "Use virus-free transplants and resistant varieties",
+    "Keep weeds that host whiteflies under control"
+   ],
+   "sources": [
+    {
+     "title": "Tomato Yellow Leaf Curl - Tomato",
+     "publisher": "UC Statewide IPM Program",
+     "url": "https://ipm.ucanr.edu/agriculture/tomato/tomato-yellow-leaf-curl/"
+    }
+   ]
+  },
+  "mosaic_virus": {
+   "severity": "high",
+   "summary": "Mosaic viruses are spread by insects (often aphids), by handling, or in seed and tubers. There is no cure for an infected plant.",
+   "symptoms": [
+    "Light and dark green mottling (mosaic) on leaves",
+    "Distorted, puckered or narrow leaves",
+    "Stunted growth"
+   ],
+   "actions": [
+    "Remove and bag infected plants",
+    "Wash hands and tools after handling infected plants",
+    "Control aphids"
+   ],
+   "prevention": [
+    "Use virus-free seed, transplants or seed tubers",
+    "Choose resistant varieties",
+    "Keep weeds that host viruses away"
+   ],
+   "sources": [
+    {
+     "title": "Cucumber mosaic virus",
+     "publisher": "RHS",
+     "url": "https://www.rhs.org.uk/disease/cucumber-mosaic-virus"
+    }
+   ]
+  },
+  "powdery_mildew": {
+   "severity": "moderate",
+   "summary": "Powdery mildews are fungal diseases that grow on the leaf surface. Unlike most leaf diseases they do not need wet leaves, and thrive in shade and warm days with cool nights.",
+   "symptoms": [
+    "White to grey powdery patches on leaves, often starting on the upper surface",
+    "Leaves yellow, curl or dry"
+   ],
+   "actions": [
+    "Remove badly affected leaves",
+    "Space and prune plants so air moves freely around the leaves",
+    "Keep plants watered at the roots - stressed plants suffer more",
+    "If you use a fungicide or pesticide, choose one labelled for this problem and plant, and follow the label"
+   ],
+   "prevention": [
+    "Choose resistant varieties",
+    "Avoid excess nitrogen fertiliser",
+    "Grow in full sun"
+   ],
+   "sources": [
+    {
+     "title": "Powdery Mildew on Vegetables",
+     "publisher": "UC Statewide IPM Program",
+     "url": "https://ipm.ucanr.edu/home-and-landscape/powdery-mildew-on-vegetables/"
+    },
+    {
+     "title": "Powdery mildews",
+     "publisher": "RHS",
+     "url": "https://www.rhs.org.uk/disease/powdery-mildews"
+    }
+   ]
+  },
+  "rust": {
+   "severity": "moderate",
+   "summary": "Rusts are fungal diseases that produce masses of powdery spores, usually spread by wind. Many need moist leaves to infect.",
+   "symptoms": [
+    "Orange, rust-brown or yellow pustules, often on the leaf underside",
+    "Yellow spots on the upper surface",
+    "Leaves yellow and drop"
+   ],
+   "actions": [
+    "Remove badly affected leaves",
+    "Space and prune plants so air moves freely around the leaves",
+    "Avoid wetting the foliage",
+    "If you use a fungicide or pesticide, choose one labelled for this problem and plant, and follow the label"
+   ],
+   "prevention": [
+    "Choose resistant varieties",
+    "Clear fallen leaves and plant debris at the end of the season"
+   ],
+   "sources": [
+    {
+     "title": "Common Rust of Corn",
+     "publisher": "Ohioline (Ohio State University)",
+     "url": "https://ohioline.osu.edu/factsheet/plpath-cer-02"
+    }
+   ]
+  },
+  "apple_scab": {
+   "severity": "moderate",
+   "summary": "Apple scab is a fungal disease spread by spring rain. It rarely kills trees but spots leaves and fruit and causes early leaf drop.",
+   "symptoms": [
+    "Olive-green to dark velvety spots on leaves",
+    "Leaves yellow and fall early",
+    "Dark scabby spots on fruit"
+   ],
+   "actions": [
+    "Rake up and remove fallen leaves in autumn",
+    "Prune to open the canopy",
+    "If you use a fungicide or pesticide, choose one labelled for this problem and plant, and follow the label"
+   ],
+   "prevention": [
+    "Choose scab-resistant varieties",
+    "Clear fallen leaves and plant debris at the end of the season"
+   ],
+   "sources": [
+    {
+     "title": "Apple and Pear Scab",
+     "publisher": "UC Statewide IPM Program",
+     "url": "https://ipm.ucanr.edu/home-and-landscape/apple-and-pear-scab/"
+    },
+    {
+     "title": "Apple and pear scab",
+     "publisher": "RHS",
+     "url": "https://www.rhs.org.uk/disease/apple-and-pear-scab"
+    }
+   ]
+  },
+  "black_rot": {
+   "severity": "moderate",
+   "summary": "Black rot is a fungal disease that overwinters on mummified fruit and infected wood, and spreads in warm, wet weather.",
+   "symptoms": [
+    "Brown leaf spots, often with a darker border or ring",
+    "Tiny black dots (fruiting bodies) in the spots",
+    "Shrivelled black fruit (mummies)"
+   ],
+   "actions": [
+    "Remove mummified fruit and dead wood",
+    "Remove badly affected leaves and bag them; do not compost them",
+    "If you use a fungicide or pesticide, choose one labelled for this problem and plant, and follow the label"
+   ],
+   "prevention": [
+    "Space and prune plants so air moves freely around the leaves",
+    "Clear fallen leaves and plant debris at the end of the season"
+   ],
+   "sources": [
+    {
+     "title": "Grape Black Rot",
+     "publisher": "Ohioline (Ohio State University)",
+     "url": "https://ohioline.osu.edu/factsheet/plpath-fru-24"
+    }
+   ]
+  },
+  "citrus_greening": {
+   "severity": "high",
+   "summary": "Citrus greening (Huanglongbing, HLB) is a bacterial disease spread by the Asian citrus psyllid. It is incurable and eventually kills trees; in many regions it must be reported.",
+   "symptoms": [
+    "Blotchy, asymmetrical yellow mottling of leaves",
+    "Yellow shoots, small upright leaves",
+    "Small, lopsided, bitter fruit"
+   ],
+   "actions": [
+    "Contact your local agriculture or extension service - HLB is a regulated disease in many places",
+    "Look for psyllids on new growth"
+   ],
+   "prevention": [
+    "Buy citrus only from certified nurseries",
+    "Do not move citrus plants or cuttings between areas"
+   ],
+   "sources": [
+    {
+     "title": "Asian Citrus Psyllid and Huanglongbing Disease",
+     "publisher": "UC Statewide IPM Program",
+     "url": "https://ipm.ucanr.edu/home-and-landscape/asian-citrus-psyllid-and-huanglongbing-disease/"
+    }
+   ]
+  },
+  "gray_leaf_spot": {
+   "severity": "moderate",
+   "summary": "Gray leaf spot of corn is a fungal disease favoured by warm, humid weather and corn residue left on the soil.",
+   "symptoms": [
+    "Long, narrow, rectangular grey to tan lesions between leaf veins",
+    "Lesions merge and leaves die"
+   ],
+   "actions": [
+    "Remove badly affected leaves in small plantings",
+    "Space and prune plants so air moves freely around the leaves"
+   ],
+   "prevention": [
+    "Rotate corn with other crops",
+    "Bury or remove crop residue",
+    "Choose resistant varieties"
+   ],
+   "sources": [
+    {
+     "title": "Corn - Pest Management Guidelines",
+     "publisher": "UC Statewide IPM Program",
+     "url": "https://ipm.ucanr.edu/agriculture/corn/"
+    }
+   ]
+  },
+  "leaf_blight": {
+   "severity": "moderate",
+   "summary": "Leaf blights are fungal diseases that cause large dead areas on leaves, favoured by warm, wet weather and long leaf wetness.",
+   "symptoms": [
+    "Large tan, brown or grey lesions",
+    "Lesions merge; leaves die back"
+   ],
+   "actions": [
+    "Remove badly affected leaves and bag them; do not compost them",
+    "Water at the base of the plant, early in the day, so leaves dry quickly",
+    "Space and prune plants so air moves freely around the leaves",
+    "If you use a fungicide or pesticide, choose one labelled for this problem and plant, and follow the label"
+   ],
+   "prevention": [
+    "Rotate crops",
+    "Clear fallen leaves and plant debris at the end of the season",
+    "Choose resistant varieties"
+   ],
+   "sources": [
+    {
+     "title": "Home and Landscape pest and disease guides",
+     "publisher": "UC Statewide IPM Program",
+     "url": "https://ipm.ucanr.edu/home-and-landscape/"
+    }
+   ]
+  },
+  "esca": {
+   "severity": "high",
+   "summary": "Esca (black measles) is a fungal trunk disease of grapevines spread through pruning wounds. Infected vines decline over years.",
+   "symptoms": [
+    "'Tiger-stripe' yellow or red patches between leaf veins that dry out",
+    "Dark spots on berries"
+   ],
+   "actions": [
+    "Mark affected vines and prune them last",
+    "Disinfect pruners and tools after working on affected plants",
+    "Ask your local extension service or plant clinic to confirm before taking drastic action"
+   ],
+   "prevention": [
+    "Prune in dry weather",
+    "Protect large pruning wounds"
+   ],
+   "sources": [
+    {
+     "title": "Esca (Black Measles) - Grape",
+     "publisher": "UC Statewide IPM Program",
+     "url": "https://ipm.ucanr.edu/agriculture/grape/esca-black-measles/"
+    }
+   ]
+  },
+  "leaf_scorch": {
+   "severity": "moderate",
+   "summary": "Strawberry leaf scorch is a fungal disease that causes many small purple spots and can weaken plants.",
+   "symptoms": [
+    "Many small dark-purple spots on the upper leaf surface",
+    "Spots merge; leaves look scorched and dry"
+   ],
+   "actions": [
+    "Remove badly affected leaves and bag them; do not compost them",
+    "Water at the base of the plant, early in the day, so leaves dry quickly"
+   ],
+   "prevention": [
+    "Replace old plantings every few years",
+    "Use healthy runners",
+    "Space and prune plants so air moves freely around the leaves"
+   ],
+   "sources": [
+    {
+     "title": "Strawberry - Pest Management Guidelines",
+     "publisher": "UC Statewide IPM Program",
+     "url": "https://ipm.ucanr.edu/agriculture/strawberry/"
+    }
+   ]
   }
+ },
+ "classes": {
+  "potato_early_blight": {
+   "sources": [
+    {
+     "title": "Early Blight - Potato",
+     "publisher": "UC Statewide IPM Program",
+     "url": "https://ipm.ucanr.edu/agriculture/potato/early-blight/"
+    },
+    {
+     "title": "Early Blight of Tomato",
+     "publisher": "NC State Extension",
+     "url": "https://content.ces.ncsu.edu/early-blight-of-tomato"
+    }
+   ]
+  },
+  "potato_late_blight": {
+   "sources": [
+    {
+     "title": "Potato Late Blight",
+     "publisher": "NC State Extension",
+     "url": "https://content.ces.ncsu.edu/potato-late-blight"
+    },
+    {
+     "title": "Late Blight - Potato",
+     "publisher": "UC Statewide IPM Program",
+     "url": "https://ipm.ucanr.edu/agriculture/potato/late-blight/"
+    },
+    {
+     "title": "Potato and tomato blight",
+     "publisher": "RHS",
+     "url": "https://www.rhs.org.uk/disease/potato-and-tomato-blight"
+    }
+   ],
+   "actions": [
+    "Remove and bag infected foliage or plants; do not compost them",
+    "If foliage is badly affected, remove it and wait before harvesting so tubers are less likely to be infected",
+    "Store only sound tubers",
+    "Ask your local extension service or plant clinic to confirm before taking drastic action"
+   ]
+  },
+  "tomato_late_blight": {
+   "sources": [
+    {
+     "title": "Tomato Late Blight",
+     "publisher": "NC State Extension",
+     "url": "https://content.ces.ncsu.edu/tomato-late-blight"
+    },
+    {
+     "title": "Late Blight",
+     "publisher": "Cornell Vegetables",
+     "url": "https://www.vegetables.cornell.edu/pest-management/disease-factsheets/late-blight/"
+    },
+    {
+     "title": "Late Blight - Tomato",
+     "publisher": "UC Statewide IPM Program",
+     "url": "https://ipm.ucanr.edu/agriculture/tomato/late-blight/"
+    }
+   ]
+  },
+  "tomato_bacterial_spot": {
+   "sources": [
+    {
+     "title": "Bacterial Spot of Pepper and Tomato",
+     "publisher": "NC State Extension",
+     "url": "https://content.ces.ncsu.edu/bacterial-spot-of-pepper-and-tomato"
+    },
+    {
+     "title": "Bacterial Spot - Tomato",
+     "publisher": "UC Statewide IPM Program",
+     "url": "https://ipm.ucanr.edu/agriculture/tomato/bacterial-spot/"
+    }
+   ]
+  },
+  "pepper_bacterial_spot": {
+   "sources": [
+    {
+     "title": "Bacterial Spot of Pepper and Tomato",
+     "publisher": "NC State Extension",
+     "url": "https://content.ces.ncsu.edu/bacterial-spot-of-pepper-and-tomato"
+    },
+    {
+     "title": "Bacterial Spot - Peppers",
+     "publisher": "UC Statewide IPM Program",
+     "url": "https://ipm.ucanr.edu/agriculture/peppers/bacterial-spot/"
+    }
+   ]
+  },
+  "peach_bacterial_spot": {
+   "summary": "Bacterial spot of peach (Xanthomonas arboricola) spreads in warm, wet, windy weather and causes leaf spots, early leaf drop and fruit spots.",
+   "sources": [
+    {
+     "title": "Home and Landscape pest and disease guides",
+     "publisher": "UC Statewide IPM Program",
+     "url": "https://ipm.ucanr.edu/home-and-landscape/"
+    }
+   ]
+  },
+  "squash_powdery_mildew": {
+   "sources": [
+    {
+     "title": "Powdery Mildew - Cucurbits",
+     "publisher": "UC Statewide IPM Program",
+     "url": "https://ipm.ucanr.edu/agriculture/cucurbits/powdery-mildew/"
+    },
+    {
+     "title": "Powdery Mildew on Vegetables",
+     "publisher": "UC Statewide IPM Program",
+     "url": "https://ipm.ucanr.edu/home-and-landscape/powdery-mildew-on-vegetables/"
+    }
+   ]
+  },
+  "apple_cedar_apple_rust": {
+   "summary": "Cedar apple rust is a fungal disease that alternates between apple and juniper (cedar) trees; spores blow from galls on junipers in wet spring weather.",
+   "symptoms": [
+    "Bright yellow-orange spots on the upper leaf surface",
+    "Small tube-like structures under the spots later in summer"
+   ],
+   "sources": [
+    {
+     "title": "Gymnosporangium Rusts (Cedar-Apple Rusts)",
+     "publisher": "Wisconsin Horticulture",
+     "url": "https://hort.extension.wisc.edu/articles/cedar-apple-rust/"
+    }
+   ]
+  },
+  "corn_common_rust": {
+   "sources": [
+    {
+     "title": "Common Rust - Corn",
+     "publisher": "UC Statewide IPM Program",
+     "url": "https://ipm.ucanr.edu/agriculture/corn/common-rust/"
+    },
+    {
+     "title": "Common Rust of Corn",
+     "publisher": "Ohioline (Ohio State University)",
+     "url": "https://ohioline.osu.edu/factsheet/plpath-cer-02"
+    }
+   ]
+  },
+  "corn_northern_leaf_blight": {
+   "summary": "Northern leaf blight of corn is a fungal disease that causes long cigar-shaped lesions and is favoured by moderate temperatures and heavy dew.",
+   "sources": [
+    {
+     "title": "Corn - Pest Management Guidelines",
+     "publisher": "UC Statewide IPM Program",
+     "url": "https://ipm.ucanr.edu/agriculture/corn/"
+    }
+   ]
+  },
+  "grape_leaf_blight": {
+   "sources": [
+    {
+     "title": "Grape - Pest Management Guidelines",
+     "publisher": "UC Statewide IPM Program",
+     "url": "https://ipm.ucanr.edu/agriculture/grape/"
+    }
+   ]
+  },
+  "apple_black_rot": {
+   "sources": [
+    {
+     "title": "Apple - Pest Management Guidelines",
+     "publisher": "UC Statewide IPM Program",
+     "url": "https://ipm.ucanr.edu/agriculture/apple/"
+    },
+    {
+     "title": "Grape Black Rot",
+     "publisher": "Ohioline (Ohio State University)",
+     "url": "https://ohioline.osu.edu/factsheet/plpath-fru-24"
+    }
+   ]
+  },
+  "tomato_mosaic_virus": {
+   "sources": [
+    {
+     "title": "Cucumber mosaic virus",
+     "publisher": "RHS",
+     "url": "https://www.rhs.org.uk/disease/cucumber-mosaic-virus"
+    },
+    {
+     "title": "Tomato - Pest Management Guidelines",
+     "publisher": "UC Statewide IPM Program",
+     "url": "https://ipm.ucanr.edu/agriculture/tomato/"
+    }
+   ]
+  }
+ },
+ "plant_care": {
+  "Apple": [
+   {
+    "title": "How to grow apples",
+    "publisher": "RHS",
+    "url": "https://www.rhs.org.uk/fruit/apples/grow-your-own"
+   }
+  ],
+  "Blueberry": [
+   {
+    "title": "How to grow blueberries",
+    "publisher": "RHS",
+    "url": "https://www.rhs.org.uk/fruit/blueberries/grow-your-own"
+   }
+  ],
+  "Cherry": [
+   {
+    "title": "How to grow cherries",
+    "publisher": "RHS",
+    "url": "https://www.rhs.org.uk/fruit/cherries/grow-your-own"
+   }
+  ],
+  "Citrus": [
+   {
+    "title": "How to grow citrus",
+    "publisher": "RHS",
+    "url": "https://www.rhs.org.uk/fruit/citrus/grow-your-own"
+   }
+  ],
+  "Corn": [
+   {
+    "title": "How to grow sweetcorn",
+    "publisher": "RHS",
+    "url": "https://www.rhs.org.uk/vegetables/sweetcorn/grow-your-own"
+   }
+  ],
+  "Grape": [
+   {
+    "title": "How to grow grapes",
+    "publisher": "RHS",
+    "url": "https://www.rhs.org.uk/fruit/grapes/grow-your-own"
+   }
+  ],
+  "Peach": [
+   {
+    "title": "Home and Landscape pest and disease guides",
+    "publisher": "UC Statewide IPM Program",
+    "url": "https://ipm.ucanr.edu/home-and-landscape/"
+   }
+  ],
+  "Pepper": [
+   {
+    "title": "How to grow sweet peppers",
+    "publisher": "RHS",
+    "url": "https://www.rhs.org.uk/vegetables/peppers/grow-your-own"
+   }
+  ],
+  "Potato": [
+   {
+    "title": "How to grow potatoes",
+    "publisher": "RHS",
+    "url": "https://www.rhs.org.uk/vegetables/potatoes/grow-your-own"
+   }
+  ],
+  "Raspberry": [
+   {
+    "title": "How to grow raspberries",
+    "publisher": "RHS",
+    "url": "https://www.rhs.org.uk/fruit/raspberries/grow-your-own"
+   }
+  ],
+  "Soybean": [
+   {
+    "title": "Home and Landscape pest and disease guides",
+    "publisher": "UC Statewide IPM Program",
+    "url": "https://ipm.ucanr.edu/home-and-landscape/"
+   }
+  ],
+  "Squash": [
+   {
+    "title": "How to grow squashes",
+    "publisher": "RHS",
+    "url": "https://www.rhs.org.uk/vegetables/squash/grow-your-own"
+   }
+  ],
+  "Strawberry": [
+   {
+    "title": "How to grow strawberries",
+    "publisher": "RHS",
+    "url": "https://www.rhs.org.uk/fruit/strawberries/grow-your-own"
+   }
+  ],
+  "Tomato": [
+   {
+    "title": "How to grow tomatoes",
+    "publisher": "RHS",
+    "url": "https://www.rhs.org.uk/vegetables/tomatoes/grow-your-own"
+   }
+  ]
+ }
 }

@@ -90,14 +90,29 @@ class ClassicalLeafDetector:
     # ------------------------------------------------------------------ public
 
     def detect_leaf(self, image: RGBImage) -> LeafResult:
+        """Cascade: isolated leaf on a plain background -> object in the centre -> main green area.
+
+        Only when none of them finds coherent plant tissue is the result "no leaf", so a busy
+        background degrades the outline quality instead of blocking the analysis.
+        """
         validate_rgb(image)
         H, W = image.shape[:2]
         scale = min(1.0, self.cfg.work_size / max(H, W))
         small = cv2.resize(image, (round(W * scale), round(H * scale)), interpolation=cv2.INTER_AREA) if scale < 1 else image
         small = cv2.GaussianBlur(small, (3, 3), 0)
+        hsv = cv2.cvtColor(small, cv2.COLOR_RGB2HSV)
+
+        method = "isolated"
         mask_small, reason = self._segment(small)
         if mask_small is None:
-            return self._not_found(image, reason)
+            first_reason = reason
+            method = "center"
+            mask_small, reason = self._center_object(small, hsv)
+            if mask_small is None:
+                method = "area"
+                mask_small, reason = self._main_green_area(hsv)
+            if mask_small is None:  # keep the plain-background step's reason when it is about size
+                return self._not_found(image, first_reason if "too small" in first_reason else reason)
 
         mask = cv2.resize(mask_small.astype(np.uint8) * 255, (W, H), interpolation=cv2.INTER_LINEAR) > 127
         contours, _ = cv2.findContours(mask.astype(np.uint8), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
@@ -120,9 +135,66 @@ class ClassicalLeafDetector:
             contour=contour,
             discoloration=disc_full,
             discoloration_fraction=float(disc_full.sum() / max(mask.sum(), 1)),
+            method=method,
         )
 
     # ----------------------------------------------------------------- private
+
+    def _plant_like(self, mask: np.ndarray, hsv: np.ndarray) -> bool:
+        if not mask.any():
+            return False
+        tissue = float(leaf_tissue_mask(hsv)[mask].mean())
+        green = float(plant_color_mask(hsv)[mask].mean())
+        return tissue >= self.cfg.min_tissue_fraction and green >= self.cfg.min_green_fraction
+
+    def _center_object(self, rgb: np.ndarray, hsv: np.ndarray) -> tuple[np.ndarray | None, str]:
+        """GrabCut seeded from the middle of the frame: a leaf held up in front of anything."""
+        h, w = hsv.shape[:2]
+        tissue = leaf_tissue_mask(hsv)
+        green = plant_color_mask(hsv)
+        gc = np.full((h, w), cv2.GC_BGD, np.uint8)
+        my, mx = int(h * 0.06), int(w * 0.06)
+        gc[my : h - my, mx : w - mx] = cv2.GC_PR_BGD
+        inner = np.zeros((h, w), bool)
+        inner[my : h - my, mx : w - mx] = True
+        gc[inner & tissue] = cv2.GC_PR_FGD
+        cy0, cy1, cx0, cx1 = int(h * 0.3), int(h * 0.7), int(w * 0.3), int(w * 0.7)
+        core = np.zeros((h, w), bool)
+        core[cy0:cy1, cx0:cx1] = True
+        core &= cv2.morphologyEx(green.astype(np.uint8), cv2.MORPH_OPEN, np.ones((5, 5), np.uint8)) > 0
+        if core.sum() < 0.01 * h * w:
+            return None, "No leaf detected - hold the leaf in the middle of the frame."
+        gc[core] = cv2.GC_FGD
+        try:
+            bgd, fgd = np.zeros((1, 65), np.float64), np.zeros((1, 65), np.float64)
+            cv2.grabCut(cv2.cvtColor(rgb, cv2.COLOR_RGB2BGR), gc, None, bgd, fgd, self.cfg.grabcut_iters,
+                        cv2.GC_INIT_WITH_MASK)
+        except cv2.error:
+            return None, "No leaf detected."
+        mask = (gc == cv2.GC_FGD) | (gc == cv2.GC_PR_FGD)
+        mask = cv2.morphologyEx(mask.astype(np.uint8), cv2.MORPH_OPEN, np.ones((5, 5), np.uint8)) > 0
+        # keep the component that covers the centre seeds
+        n, lab, stats, _ = cv2.connectedComponentsWithStats(mask.astype(np.uint8), connectivity=8)
+        if n <= 1:
+            return None, "No leaf detected."
+        overlap = np.bincount(lab[core], minlength=n)
+        overlap[0] = 0
+        mask = _pad_fill_holes(lab == int(np.argmax(overlap)))
+        if not (self.cfg.min_area <= mask.mean() <= 0.9) or not self._plant_like(mask, hsv):
+            return None, "No leaf detected."
+        return mask, "Busy background - outlined the leaf in the middle of the frame."
+
+    def _main_green_area(self, hsv: np.ndarray) -> tuple[np.ndarray | None, str]:
+        """Last resort: the largest coherent patch of plant tissue (foliage, a leaf filling the view)."""
+        h, w = hsv.shape[:2]
+        veg = leaf_tissue_mask(hsv) & (hsv[..., 1] >= 30)
+        veg = cv2.morphologyEx(veg.astype(np.uint8), cv2.MORPH_OPEN, np.ones((5, 5), np.uint8))
+        veg = cv2.morphologyEx(veg, cv2.MORPH_CLOSE, np.ones((11, 11), np.uint8)) > 0
+        mask = _pad_fill_holes(_largest_component(veg))
+        if mask.mean() < self.cfg.min_area or not self._plant_like(mask, hsv):
+            return None, "No leaf detected - no plant is visible. Hold one leaf in the middle of the frame."
+        return mask, ("Several leaves or a busy background - analysed the main green area. "
+                      "For best results, show one leaf against a plain background.")
 
     def _segment(self, rgb: np.ndarray) -> tuple[np.ndarray | None, str]:
         cfg = self.cfg

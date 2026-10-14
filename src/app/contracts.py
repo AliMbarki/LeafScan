@@ -19,7 +19,7 @@ import cv2
 import numpy as np
 from numpy.typing import NDArray
 
-from app.labels import UNCERTAIN_KEY, UNCERTAIN_NAME, Labels, get_labels
+from app.labels import UNCERTAIN_KEY, UNCERTAIN_NAME, UNKNOWN_GROUP, Labels, get_labels
 
 RGBImage = NDArray[np.uint8]
 Mask = NDArray[np.bool_]
@@ -67,8 +67,15 @@ class Prediction:
 class ClassifierResult:
     """Output of ``classify.predict``.
 
-    When ``is_uncertain`` is True, ``class_id`` is None and ``disease_name`` is
-    "Not sure" -- the best guesses are still available in ``top_k``.
+    Two decisions are made separately:
+
+    * **plant** - probabilities of all classes of a plant are summed. If the best plant is
+      below the threshold, or is the unknown-plant group, ``plant`` is None.
+    * **condition** - the best class of that plant. If it is below the threshold the
+      condition is "Not sure" (``class_id`` None, ``is_uncertain`` True) but ``plant`` can
+      still be known ("Tomato - not sure what's wrong").
+
+    The best guesses are always available in ``top_k``. A label is never forced.
     """
 
     class_id: int | None
@@ -77,6 +84,9 @@ class ClassifierResult:
     is_uncertain: bool
     class_key: str = UNCERTAIN_KEY
     top_k: tuple[Prediction, ...] = ()
+    plant: str | None = None
+    plant_confidence: float = 0.0
+    unknown_plant: bool = False  # confidently "a plant LeafScan does not know"
 
     @classmethod
     def from_probabilities(
@@ -85,19 +95,32 @@ class ClassifierResult:
         labels: Labels,
         threshold: float = DEFAULT_UNCERTAINTY_THRESHOLD,
         k: int = 3,
+        plant_threshold: float | None = None,
     ) -> "ClassifierResult":
         p = np.asarray(probs, dtype=np.float64)
         if p.shape != (len(labels),):
             raise ValueError(f"expected {len(labels)} probabilities, got shape {p.shape}")
+        plant_threshold = threshold if plant_threshold is None else plant_threshold
         order = np.argsort(-p)[:k]
         top = tuple(
             Prediction(int(i), labels.by_id(int(i)).key, labels.by_id(int(i)).display_name, float(p[i]))
             for i in order
         )
-        best = top[0]
-        if best.probability < threshold:
-            return cls(None, UNCERTAIN_NAME, best.probability, True, UNCERTAIN_KEY, top)
-        return cls(best.class_id, best.name, best.probability, False, best.class_key, top)
+        groups = labels.plant_groups
+        plant_p = {name: float(p[ids].sum()) for name, ids in groups.items()}
+        best_plant = max(plant_p, key=plant_p.get)
+        pconf = plant_p[best_plant]
+        if best_plant == UNKNOWN_GROUP and pconf >= plant_threshold:
+            uid = groups[UNKNOWN_GROUP][0]
+            return cls(None, labels.unknown_name, pconf, True, labels.by_id(uid).key, top, None, pconf, True)
+        if best_plant == UNKNOWN_GROUP or pconf < plant_threshold:
+            return cls(None, UNCERTAIN_NAME, float(p.max()), True, UNCERTAIN_KEY, top, None, pconf)
+        ids = groups[best_plant]
+        best = max(ids, key=lambda i: p[i])
+        info = labels.by_id(best)
+        if p[best] < threshold:
+            return cls(None, UNCERTAIN_NAME, float(p[best]), True, UNCERTAIN_KEY, top, best_plant, pconf)
+        return cls(best, info.display_name, float(p[best]), False, info.key, top, best_plant, pconf)
 
 
 @runtime_checkable
@@ -122,6 +145,7 @@ class LeafResult:
     contour: NDArray[np.int32] | None = None  # (N, 1, 2) outline in input coordinates
     discoloration: Mask | None = None  # optional: off-colour pixels inside the leaf
     discoloration_fraction: float = 0.0  # share of leaf area that is discoloured
+    method: str = "isolated"  # "isolated" (plain background) | "center" (busy background) | "area" (main green area)
 
 
 @runtime_checkable
@@ -189,6 +213,7 @@ class ScanRecord:
     class_id: int | None = None
     is_uncertain: bool = False
     overlay_image: RGBImage | None = None
+    species: str | None = None  # predicted plant species (known even when the condition is "not sure")
 
     @classmethod
     def from_analysis(cls, result: AnalysisResult, plant_id: int, timestamp: datetime | None = None) -> "ScanRecord":
@@ -203,6 +228,7 @@ class ScanRecord:
             class_id=c.class_id if c else None,
             is_uncertain=c.is_uncertain if c else True,
             overlay_image=result.overlay_image,
+            species=c.plant if c else None,
         )
 
 
@@ -228,6 +254,7 @@ class StoredScan:
     model_version: str
     image_path: str  # absolute
     overlay_path: str | None
+    species: str | None = None
 
 
 @runtime_checkable
@@ -257,6 +284,9 @@ class MockClassifier:
     threshold: float = DEFAULT_UNCERTAINTY_THRESHOLD
     labels: Labels = field(default_factory=get_labels)
     model_version: str = "mock-0"
+
+    def predict_views(self, views: list[RGBImage]) -> ClassifierResult:
+        return self.predict(views[0])
 
     def predict(self, image: RGBImage) -> ClassifierResult:
         validate_rgb(image)

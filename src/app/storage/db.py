@@ -10,7 +10,7 @@ from pathlib import Path
 from app.capture import save_rgb_png
 from app.contracts import Plant, ScanRecord, StoredScan
 
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
 
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS plants (
@@ -28,7 +28,8 @@ CREATE TABLE IF NOT EXISTS scans (
     is_uncertain  INTEGER NOT NULL,
     model_version TEXT NOT NULL,
     image_path    TEXT NOT NULL,            -- relative to the data dir
-    overlay_path  TEXT
+    overlay_path  TEXT,
+    species       TEXT                      -- predicted plant species (v2)
 );
 CREATE INDEX IF NOT EXISTS idx_scans_plant_time ON scans(plant_id, timestamp);
 """
@@ -50,8 +51,14 @@ class SqliteScanStore:
         self.conn.row_factory = sqlite3.Row
         self.conn.execute("PRAGMA foreign_keys = ON")
         self.conn.executescript(SCHEMA)
+        self._migrate()
         self.conn.execute(f"PRAGMA user_version = {SCHEMA_VERSION}")
         self.conn.commit()
+
+    def _migrate(self) -> None:
+        cols = {r[1] for r in self.conn.execute("PRAGMA table_info(scans)")}
+        if "species" not in cols:  # v1 -> v2
+            self.conn.execute("ALTER TABLE scans ADD COLUMN species TEXT")
 
     def close(self) -> None:
         self.conn.close()
@@ -97,7 +104,7 @@ class SqliteScanStore:
 
     def save_scan(self, record: ScanRecord) -> int:
         if self.conn.execute("SELECT 1 FROM plants WHERE id = ?", (record.plant_id,)).fetchone() is None:
-            raise ValueError(f"unknown plant id {record.plant_id}")
+            raise ValueError(f"no plant with id {record.plant_id}")
         stem = f"{record.timestamp:%Y%m%d-%H%M%S}-{uuid.uuid4().hex[:6]}"
         month = self.image_dir / f"{record.timestamp:%Y-%m}"
         image_path = month / f"{stem}.png"
@@ -109,8 +116,8 @@ class SqliteScanStore:
             overlay_rel = overlay_path.relative_to(self.root).as_posix()
         cur = self.conn.execute(
             """INSERT INTO scans(plant_id, timestamp, prediction, class_id, confidence, is_uncertain,
-                                 model_version, image_path, overlay_path)
-               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                                 model_version, image_path, overlay_path, species)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
             (
                 record.plant_id,
                 record.timestamp.isoformat(timespec="seconds"),
@@ -121,6 +128,7 @@ class SqliteScanStore:
                 record.model_version,
                 image_path.relative_to(self.root).as_posix(),
                 overlay_rel,
+                record.species,
             ),
         )
         self.conn.commit()
@@ -197,4 +205,5 @@ class SqliteScanStore:
             model_version=r["model_version"],
             image_path=str(self.root / r["image_path"]),
             overlay_path=str(self.root / r["overlay_path"]) if r["overlay_path"] else None,
+            species=r["species"],
         )

@@ -1,0 +1,21 @@
+{
+ "version": "mobilenetv2-plantvillage-38c",
+ "file": "plant_disease.onnx",
+ "input": "pixel_values",
+ "num_classes": 38,
+ "resize_shortest": 256,
+ "crop": 224,
+ "mean": [
+  0.5,
+  0.5,
+  0.5
+ ],
+ "std": [
+  0.5,
+  0.5,
+  0.5
+ ],
+ "source": "https://huggingface.co/linkanjarad/mobilenet_v2_1.0_224-plant-disease-identification (ONNX export: onnx-community)",
+ "license": "other - see the model card",
+ "reported_accuracy": "95.4% on the PlantVillage evaluation split (model card)"
+}

@@ -63,7 +63,7 @@ class ScanDetailDialog(QDialog):
         if pm.isNull():
             img.setText("Image file is missing.")
         lay.addWidget(img, 1)
-        lay.addWidget(label(labels.display_name(scan.prediction), "H2"))
+        lay.addWidget(label(labels.display_name(scan.prediction, scan.species), "H2"))
         lay.addWidget(
             label(
                 f"{scan.plant_name}  |  {scan.timestamp:%Y-%m-%d %H:%M}  |  confidence {format_confidence(scan.confidence)}"
@@ -170,7 +170,7 @@ class HistoryView(QWidget):
         if plant_id is not None:
             name = next((p.name for p in self.store.list_plants() if p.id == plant_id), None)
             by_plant = {name: by_plant[name]} if name in by_plant else {}
-        self.plant_chart.update_data(by_plant, self.labels, self.theme)
+        self.plant_chart.update_data(by_plant, self.labels, self.theme, self.store.prediction_counts(None))
 
     def set_theme(self, theme: Theme) -> None:
         self.theme = theme
@@ -207,7 +207,7 @@ class HistoryView(QWidget):
             self.table.setItem(row, 0, thumb)
             self.table.setItem(row, 1, QTableWidgetItem(f"{s.timestamp:%Y-%m-%d  %H:%M}"))
             self.table.setItem(row, 2, QTableWidgetItem(s.plant_name))
-            self.table.setItem(row, 3, QTableWidgetItem(self.labels.display_name(s.prediction)))
+            self.table.setItem(row, 3, QTableWidgetItem(self.labels.display_name(s.prediction, s.species)))
             conf = QTableWidgetItem(format_confidence(s.confidence))
             conf.setTextAlignment(Qt.AlignRight | Qt.AlignVCenter)
             self.table.setItem(row, 4, conf)
