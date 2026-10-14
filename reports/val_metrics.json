@@ -1,0 +1,165 @@
+{
+  "n": 1686,
+  "accuracy": 0.9970344009489917,
+  "macro_f1": 0.9973292257622136,
+  "uncertainty_threshold": 0.6,
+  "uncertain_rate": 0.0011862396204033177,
+  "accuracy_when_confident": 0.9970308788598575,
+  "per_class": {
+    "pepper_bacterial_spot": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 150
+    },
+    "pepper_healthy": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 221
+    },
+    "potato_early_blight": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 150
+    },
+    "potato_late_blight": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 150
+    },
+    "potato_healthy": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 23
+    },
+    "tomato_bacterial_spot": {
+      "precision": 0.996875,
+      "recall": 1.0,
+      "f1": 0.9984350547730829,
+      "support": 319
+    },
+    "tomato_early_blight": {
+      "precision": 0.9866666666666667,
+      "recall": 0.9866666666666667,
+      "f1": 0.9866666666666667,
+      "support": 150
+    },
+    "tomato_late_blight": {
+      "precision": 0.9964664310954063,
+      "recall": 0.9894736842105263,
+      "f1": 0.9929577464788732,
+      "support": 285
+    },
+    "tomato_healthy": {
+      "precision": 0.99581589958159,
+      "recall": 1.0,
+      "f1": 0.9979035639412998,
+      "support": 238
+    }
+  },
+  "confusion_matrix": [
+    [
+      150,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      221,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      150,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      150,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      23,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      319,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      1,
+      148,
+      1,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      2,
+      282,
+      1
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      238
+    ]
+  ]
+}

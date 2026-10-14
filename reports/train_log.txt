@@ -1,0 +1,27 @@
+device: cuda (NVIDIA GeForce GTX 1650 Ti)
+train: 7868 images
+val  : 1686 images
+test : 1686 images
+preloaded val/test in 3s
+epoch  1/20  loss 1.0125  train 0.7613  val 0.8493  vF1 0.8013  (145s)
+epoch  2/20  loss 0.4770  train 0.9544  val 0.9496  vF1 0.9444  (43s)
+epoch  3/20  loss 0.4291  train 0.9713  val 0.9686  vF1 0.9458  (42s)
+epoch  4/20  loss 0.4019  train 0.9780  val 0.9870  vF1 0.9845  (42s)
+epoch  5/20  loss 0.3880  train 0.9841  val 0.9875  vF1 0.9861  (5127s)
+epoch  6/20  loss 0.3820  train 0.9845  val 0.9810  vF1 0.9773  (50s)
+epoch  7/20  loss 0.3741  train 0.9866  val 0.9881  vF1 0.9863  (30s)
+epoch  8/20  loss 0.3706  train 0.9882  val 0.9905  vF1 0.9847  (28s)
+epoch  9/20  loss 0.3595  train 0.9909  val 0.9929  vF1 0.9915  (28s)
+epoch 10/20  loss 0.3538  train 0.9940  val 0.9905  vF1 0.9867  (29s)
+epoch 11/20  loss 0.3496  train 0.9949  val 0.9923  vF1 0.9908  (33s)
+epoch 12/20  loss 0.3454  train 0.9965  val 0.9923  vF1 0.9908  (36s)
+epoch 13/20  loss 0.3450  train 0.9958  val 0.9947  vF1 0.9909  (35s)
+epoch 14/20  loss 0.3414  train 0.9973  val 0.9970  vF1 0.9973  (36s)
+epoch 15/20  loss 0.3417  train 0.9972  val 0.9958  vF1 0.9939  (40s)
+epoch 16/20  loss 0.3393  train 0.9980  val 0.9958  vF1 0.9964  (46s)
+epoch 17/20  loss 0.3412  train 0.9973  val 0.9947  vF1 0.9953  (40s)
+epoch 18/20  loss 0.3399  train 0.9976  val 0.9958  vF1 0.9964  (45s)
+epoch 19/20  loss 0.3376  train 0.9983  val 0.9958  vF1 0.9964  (52s)
+epoch 20/20  loss 0.3388  train 0.9974  val 0.9958  vF1 0.9964  (53s)
+best epoch 14 (val macro-F1 0.9973); temperature 0.530
+saved C:\Users\alimb\Desktop\chafik2\models\leafscan_mnv3s.pt (mnv3s-9c-20261014-1638); test acc 0.9982, macro-F1 0.9960

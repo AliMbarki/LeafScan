@@ -1,0 +1,19 @@
+Validation - mnv3s-9c-20261014-1638
+
+                       precision    recall  f1-score   support
+
+pepper_bacterial_spot     1.0000    1.0000    1.0000       150
+       pepper_healthy     1.0000    1.0000    1.0000       221
+  potato_early_blight     1.0000    1.0000    1.0000       150
+   potato_late_blight     1.0000    1.0000    1.0000       150
+       potato_healthy     1.0000    1.0000    1.0000        23
+tomato_bacterial_spot     0.9969    1.0000    0.9984       319
+  tomato_early_blight     0.9867    0.9867    0.9867       150
+   tomato_late_blight     0.9965    0.9895    0.9930       285
+       tomato_healthy     0.9958    1.0000    0.9979       238
+
+             accuracy                         0.9970      1686
+            macro avg     0.9973    0.9973    0.9973      1686
+         weighted avg     0.9970    0.9970    0.9970      1686
+
+uncertain (<0.60) rate: 0.12%

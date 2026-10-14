@@ -1,13 +1,30 @@
-"""Leaf disease classification. Phase 1: mock classifier."""
+"""Leaf disease classification (PyTorch MobileNetV3-Small).
+
+``predict(rgb_image)`` is the module-level convenience API; the app builds its own
+classifier instance on the analysis thread via ``load_classifier``.
+"""
 from __future__ import annotations
 
-from app.contracts import Classifier, ClassifierResult, MockClassifier, RGBImage
+from pathlib import Path
+
+from app.contracts import DEFAULT_UNCERTAINTY_THRESHOLD, Classifier, ClassifierResult, RGBImage
+
+MODEL_FILENAME = "leafscan_mnv3s.pt"
 
 _default: Classifier | None = None
 
 
-def load_classifier(threshold: float | None = None) -> Classifier:
-    return MockClassifier() if threshold is None else MockClassifier(threshold=threshold)
+def default_model_path() -> Path:
+    from app.config import Settings
+
+    return Settings().models_dir / MODEL_FILENAME
+
+
+def load_classifier(model_path: Path | None = None, threshold: float = DEFAULT_UNCERTAINTY_THRESHOLD) -> Classifier:
+    """Load the trained model. Raises ModelLoadError (or ImportError if torch is missing)."""
+    from app.classify.predictor import TorchClassifier
+
+    return TorchClassifier(model_path or default_model_path(), threshold)
 
 
 def predict(rgb_image: RGBImage) -> ClassifierResult:
