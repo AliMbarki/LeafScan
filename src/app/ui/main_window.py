@@ -1,6 +1,7 @@
 """Main window: sidebar navigation, scan page, history page."""
 from __future__ import annotations
 
+import dataclasses
 import logging
 from pathlib import Path
 from typing import Callable
@@ -51,6 +52,9 @@ class ScanPage(QWidget):
         self.hint = label("Space: capture  |  Ctrl+O: import  |  Esc: back to live", "Caption")
         head.addWidget(self.hint)
         left.addLayout(head)
+        self.banner = label("", "Banner", wrap=True)
+        self.banner.hide()
+        left.addWidget(self.banner)
         self.camera = CameraView()
         left.addWidget(self.camera, 1)
 
@@ -115,6 +119,7 @@ class MainWindow(QMainWindow):
         sp.live_btn.clicked.connect(self.back_to_live)
         sp.retry_btn.clicked.connect(self.start_camera)
         sp.result_panel.save_requested.connect(self.save_current)
+        sp.result_panel.highlight_toggled.connect(self.set_highlight)
         self.history.changed.connect(self._refresh_plants)
         QShortcut(QKeySequence(Qt.Key_Space), self, activated=self._space)
         QShortcut(QKeySequence.Open, self, activated=lambda: self.import_image())
@@ -128,6 +133,10 @@ class MainWindow(QMainWindow):
         self.controller.busy_changed.connect(self._update_controls)
 
         self.set_theme(self.prefs.value("theme", "dark"))
+        self._renderer = None
+        highlight = str(self.prefs.value("highlight_discoloration", "true")).lower() == "true"
+        sp.result_panel.highlight.setChecked(highlight)
+        self.controller.set_highlight(highlight)
         self._refresh_plants()
         self.history.refresh()
         self._update_controls()
@@ -274,6 +283,9 @@ class MainWindow(QMainWindow):
 
     def _on_ready(self, version: str, warning: str) -> None:
         self.model_status.setText(f"Model: {version}")
+        if warning:
+            self.scan_page.banner.setText(warning)
+            self.scan_page.banner.show()
         self.statusBar().showMessage(warning or "Ready.", 10000 if warning else 3000)
         self._update_controls()
 
@@ -288,6 +300,28 @@ class MainWindow(QMainWindow):
             self.model_status.setText("Model: failed to load")
         self.scan_page.result_panel.show_error(message)
         self.statusBar().showMessage(message, 8000)
+
+    def set_highlight(self, on: bool) -> None:
+        """Toggle the discoloration tint; re-render the current overlay (drawing only, no inference)."""
+        self.prefs.setValue("highlight_discoloration", "true" if on else "false")
+        self.controller.set_highlight(on)
+        panel = self.scan_page.result_panel
+        result = panel.result
+        if result is None or self.controller.busy:
+            return
+        if self._renderer is None:
+            from app.vision import LeafOverlayRenderer
+
+            self._renderer = LeafOverlayRenderer()
+        self._renderer.highlight_discoloration = on
+        overlay = self._renderer.render(result.image, result.leaf, result.classification)
+        result = dataclasses.replace(result, overlay_image=overlay)
+        saved_note = panel.save_note.text()
+        can_save = panel.save_btn.isEnabled()
+        panel.show_result(result)
+        panel.save_btn.setEnabled(can_save)
+        panel.save_note.setText(saved_note)
+        self.scan_page.camera.freeze(overlay, "RESULT")
 
     def back_to_live(self) -> None:
         if self.controller.busy:

@@ -96,6 +96,10 @@ QLabel#Disclaimer {{
     color: {t.muted}; font-size: 8.5pt; padding: 8px 10px;
     border: 1px dashed {t.border}; border-radius: 8px;
 }}
+QLabel#Banner {{
+    background: {rgba(t.warn, 0.14)}; color: {t.warn}; border: 1px solid {rgba(t.warn, 0.45)};
+    border-radius: 10px; padding: 8px 12px; font-weight: 600;
+}}
 QLabel#Chip {{ border-radius: 10px; padding: 3px 10px; font-weight: 700; font-size: 8.5pt; }}
 QLabel#Chip[tone="ok"]     {{ background: {rgba(t.ok, 0.14)}; color: {t.ok}; }}
 QLabel#Chip[tone="warn"]   {{ background: {rgba(t.warn, 0.14)}; color: {t.warn}; }}

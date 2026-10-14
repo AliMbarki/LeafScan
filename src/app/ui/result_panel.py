@@ -5,6 +5,7 @@ import html
 
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import (
+    QCheckBox,
     QComboBox,
     QHBoxLayout,
     QProgressBar,
@@ -69,6 +70,7 @@ class GuidanceCard(QWidget):
 
 class ResultPanel(QWidget):
     save_requested = Signal(str)  # plant name
+    highlight_toggled = Signal(bool)
 
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
@@ -123,6 +125,13 @@ class ResultPanel(QWidget):
         cr.addWidget(self.alternatives)
         lay.addWidget(self.conf_row)
         self.conf_row.hide()
+        self.disc_label = label("", "Caption", wrap=True)
+        self.disc_label.hide()
+        lay.addWidget(self.disc_label)
+        self.highlight = QCheckBox("Highlight discoloration")
+        self.highlight.setToolTip("Tint off-colour areas inside the leaf (yellowing, spots, lesions)")
+        self.highlight.toggled.connect(self.highlight_toggled)
+        lay.addWidget(self.highlight)
         col.addWidget(res_card)
 
         # --- guidance
@@ -173,6 +182,7 @@ class ResultPanel(QWidget):
         self._suggestion = suggestion
 
     def show_idle(self) -> None:
+        self.disc_label.hide()
         self._result = None
         self._set_chip("Ready", "muted")
         self.title.setText("Scan a leaf")
@@ -184,6 +194,7 @@ class ResultPanel(QWidget):
         self.save_note.setText("")
 
     def show_busy(self) -> None:
+        self.disc_label.hide()
         self._set_chip("Analyzing", "muted")
         self.title.setText("Analyzing...")
         self.subtitle.setText("Finding the leaf and classifying it.")
@@ -193,6 +204,7 @@ class ResultPanel(QWidget):
         self.save_note.setText("")
 
     def show_error(self, message: str) -> None:
+        self.disc_label.hide()
         self._result = None
         self._set_chip("Error", "danger")
         self.title.setText("Something went wrong")
@@ -207,6 +219,15 @@ class ResultPanel(QWidget):
         self.timing.setText(f"{result.elapsed_ms:.0f} ms")
         self.save_btn.setEnabled(True)
         self.save_note.setText("")
+        leaf = result.leaf
+        if leaf.found and leaf.discoloration is not None:
+            self.disc_label.setText(
+                f"Off-colour area: {leaf.discoloration_fraction:.0%} of the leaf"
+                + (" (tinted pink)" if self.highlight.isChecked() else "")
+            )
+            self.disc_label.show()
+        else:
+            self.disc_label.hide()
         c = result.classification
         if c is None:
             self._set_chip("No leaf", "warn")

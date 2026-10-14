@@ -110,6 +110,9 @@ class LeafResult:
     bbox: tuple[int, int, int, int] | None = None  # x, y, w, h in input coordinates
     area_fraction: float = 0.0
     message: str = ""
+    contour: NDArray[np.int32] | None = None  # (N, 1, 2) outline in input coordinates
+    discoloration: Mask | None = None  # optional: off-colour pixels inside the leaf
+    discoloration_fraction: float = 0.0  # share of leaf area that is discoloured
 
 
 @runtime_checkable

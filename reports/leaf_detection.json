@@ -1,0 +1,32 @@
+{
+  "images": 1686,
+  "found_rate": 0.998220640569395,
+  "per_class_found_rate": {
+    "pepper_bacterial_spot": 1.0,
+    "pepper_healthy": 1.0,
+    "potato_early_blight": 1.0,
+    "potato_late_blight": 1.0,
+    "potato_healthy": 1.0,
+    "tomato_bacterial_spot": 1.0,
+    "tomato_early_blight": 1.0,
+    "tomato_late_blight": 0.9894736842105263,
+    "tomato_healthy": 1.0
+  },
+  "ms_mean": 87.15006322659157,
+  "ms_p95": 111.51107499972568,
+  "missed": [
+    {
+      "image": "tomato_late_blight/5fd70dc91f77b5f8.jpg",
+      "reason": "No leaf detected - the shape is too irregular for a single leaf. Try a plainer background."
+    },
+    {
+      "image": "tomato_late_blight/6baa5d8ee67a84df.jpg",
+      "reason": "No leaf detected - the region runs off the edges of the frame. Use a plain background with the whole leaf in view."
+    },
+    {
+      "image": "tomato_late_blight/8db2a05571097266.jpg",
+      "reason": "No leaf detected - the object is too small. Move the leaf closer to the camera."
+    }
+  ],
+  "note": "Dataset images (256x256, plain backgrounds). Webcam frames are larger: work size is capped at 448px."
+}

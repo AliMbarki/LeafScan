@@ -32,6 +32,11 @@ class _AnalysisWorker(QObject):
             log.exception("pipeline init failed")
             self.failed.emit(f"Could not load the analysis pipeline: {exc}")
 
+    @Slot(bool)
+    def set_highlight(self, on: bool) -> None:
+        if self._pipeline is not None and hasattr(self._pipeline.overlay, "highlight_discoloration"):
+            self._pipeline.overlay.highlight_discoloration = on
+
     @Slot(object)
     def analyze(self, image: RGBImage) -> None:
         if self._pipeline is None:
@@ -54,6 +59,7 @@ class AnalysisController(QObject):
     failed = Signal(str)
     busy_changed = Signal(bool)
     _request = Signal(object)
+    _highlight = Signal(bool)
 
     def __init__(self, factory: Callable[[], tuple[AnalysisPipeline, str]], parent: QObject | None = None) -> None:
         super().__init__(parent)
@@ -63,6 +69,7 @@ class AnalysisController(QObject):
         self._worker.moveToThread(self._thread)
         self._thread.started.connect(self._worker.initialize)
         self._request.connect(self._worker.analyze)
+        self._highlight.connect(self._worker.set_highlight)
         self._worker.ready.connect(self._on_ready)
         self._worker.finished.connect(self._on_finished)
         self._worker.failed.connect(self._on_failed)
@@ -87,6 +94,9 @@ class AnalysisController(QObject):
         self._set_busy(True)
         self._request.emit(image)
         return True
+
+    def set_highlight(self, on: bool) -> None:
+        self._highlight.emit(on)
 
     def _set_busy(self, busy: bool) -> None:
         self._busy = busy
