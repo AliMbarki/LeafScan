@@ -1,4 +1,8 @@
-"""Dark/light design tokens and the Qt stylesheet generated from them."""
+"""Design tokens and the Qt stylesheet generated from them.
+
+Look: a plant-app style (deep forest-green brand panel, soft sage background, white rounded cards,
+pill buttons, fresh lime accent), in a light and a dark variant.
+"""
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -23,40 +27,48 @@ class Theme:
     warn: str
     danger: str
     chart: tuple[str, ...]
+    brand: str = "#173f30"  # sidebar / hero green
+    brand_text: str = "#eaf3ec"
+    brand_muted: str = "#9fbcab"
+    lime: str = "#c5f36b"  # highlight accent (active nav, scan frame)
+    on_lime: str = "#14311f"
 
-
-DARK = Theme(
-    name="dark",
-    bg="#0e1311",
-    surface="#151b18",
-    surface2="#1c2420",
-    border="#27312c",
-    text="#e6ece8",
-    muted="#8d9b94",
-    accent="#3ecf8e",
-    accent_hover="#5ad9a0",
-    on_accent="#06140d",
-    ok="#3ecf8e",
-    warn="#f0b44c",
-    danger="#ef6a5f",
-    chart=("#3ecf8e", "#5aa9f0", "#f0b44c", "#c78bf0", "#ef6a5f", "#4fd1c5", "#f08fc0", "#a3c95a", "#9aa5b1"),
-)
 
 LIGHT = Theme(
     name="light",
-    bg="#f3f5f4",
+    bg="#eef3ee",
     surface="#ffffff",
-    surface2="#edf1ef",
-    border="#dbe2de",
-    text="#16201b",
-    muted="#5b6a62",
-    accent="#1c9a60",
-    accent_hover="#17844f",
+    surface2="#f2f6f1",
+    border="#dde7de",
+    text="#15291f",
+    muted="#6a7e72",
+    accent="#1f5e45",
+    accent_hover="#174a36",
     on_accent="#ffffff",
-    ok="#1c9a60",
-    warn="#b7791f",
-    danger="#c2412f",
-    chart=("#1c9a60", "#2f7fd1", "#c98a14", "#8a52c7", "#c2412f", "#1f9e93", "#c4508a", "#6f9a22", "#6b7785"),
+    ok="#2e8b57",
+    warn="#c47f12",
+    danger="#c8463a",
+    chart=("#1f5e45", "#2f7fd1", "#c98a14", "#8a52c7", "#c8463a", "#1f9e93", "#c4508a", "#6f9a22", "#6b7785"),
+)
+
+DARK = Theme(
+    name="dark",
+    bg="#0e1813",
+    surface="#15231b",
+    surface2="#1c2e24",
+    border="#26392f",
+    text="#e8f1ea",
+    muted="#8fa79a",
+    accent="#6cc995",
+    accent_hover="#86d6a8",
+    on_accent="#0b1a12",
+    ok="#6cc995",
+    warn="#f0b44c",
+    danger="#ef7a6f",
+    chart=("#6cc995", "#5aa9f0", "#f0b44c", "#c78bf0", "#ef7a6f", "#4fd1c5", "#f08fc0", "#a3c95a", "#9aa5b1"),
+    brand="#0b2a1f",
+    brand_text="#e8f1ea",
+    brand_muted="#86a596",
 )
 
 THEMES = {t.name: t for t in (DARK, LIGHT)}
@@ -69,68 +81,84 @@ def rgba(hex_color: str, alpha: float) -> str:
 
 def stylesheet(t: Theme) -> str:
     return f"""
-* {{ font-family: "Segoe UI Variable", "Segoe UI", "Inter", sans-serif; font-size: 10pt; color: {t.text}; }}
+* {{ font-family: "Segoe UI Variable Text", "Segoe UI", "Inter", sans-serif; font-size: 10pt; color: {t.text}; }}
 QMainWindow, QWidget#Root {{ background: {t.bg}; }}
 QWidget#Page {{ background: {t.bg}; }}
-QToolTip {{ background: {t.surface2}; color: {t.text}; border: 1px solid {t.border}; padding: 4px; }}
+QToolTip {{ background: {t.surface}; color: {t.text}; border: 1px solid {t.border}; padding: 6px; border-radius: 6px; }}
 
-QFrame#Sidebar {{ background: {t.surface}; border-right: 1px solid {t.border}; }}
-QLabel#Brand {{ font-size: 15pt; font-weight: 700; }}
-QLabel#BrandMark {{ color: {t.accent}; font-size: 18pt; font-weight: 800; }}
-QPushButton#NavButton {{
-    text-align: left; padding: 9px 14px; border: none; border-radius: 8px;
-    background: transparent; color: {t.muted}; font-weight: 600;
+/* ---------- brand sidebar ---------- */
+QFrame#Sidebar {{ background: {t.brand}; border: none; }}
+QFrame#Sidebar QLabel {{ color: {t.brand_text}; background: transparent; }}
+QFrame#Sidebar QLabel#Caption {{ color: {t.brand_muted}; }}
+QLabel#Brand {{ font-family: "Segoe UI Variable Display", "Segoe UI"; font-size: 16pt; font-weight: 700; }}
+QLabel#BrandMark {{
+    background: {t.lime}; color: {t.on_lime}; border-radius: 12px;
+    font-size: 13pt; font-weight: 800; padding: 2px 8px;
 }}
-QPushButton#NavButton:hover {{ background: {t.surface2}; color: {t.text}; }}
-QPushButton#NavButton:checked {{ background: {t.surface2}; color: {t.accent}; }}
+QLabel#BrandTag {{ color: {t.brand_muted}; font-size: 8.5pt; }}
+QPushButton#NavButton {{
+    text-align: left; padding: 11px 16px; border: none; border-radius: 16px;
+    background: transparent; color: {t.brand_muted}; font-weight: 600; font-size: 10.5pt;
+}}
+QPushButton#NavButton:hover {{ background: {rgba(t.brand_text, 0.08)}; color: {t.brand_text}; }}
+QPushButton#NavButton:checked {{ background: {t.lime}; color: {t.on_lime}; }}
+QFrame#Sidebar QPushButton[flat="true"] {{ color: {t.brand_muted}; }}
+QFrame#Sidebar QPushButton[flat="true"]:hover {{ color: {t.brand_text}; }}
+QFrame#TipCard {{ background: {rgba(t.brand_text, 0.07)}; border-radius: 16px; }}
 
-QFrame#Card {{ background: {t.surface}; border: 1px solid {t.border}; border-radius: 14px; }}
-QFrame#SubCard {{ background: {t.surface2}; border: none; border-radius: 10px; }}
-QLabel#H1 {{ font-size: 18pt; font-weight: 700; }}
-QLabel#H2 {{ font-size: 13pt; font-weight: 700; }}
+/* ---------- cards & type ---------- */
+QFrame#Card {{ background: {t.surface}; border: 1px solid {t.border}; border-radius: 20px; }}
+QFrame#SubCard {{ background: {t.surface2}; border: none; border-radius: 16px; }}
+QLabel#H1 {{ font-family: "Segoe UI Variable Display", "Segoe UI"; font-size: 20pt; font-weight: 700; }}
+QLabel#H2 {{ font-family: "Segoe UI Variable Display", "Segoe UI"; font-size: 14pt; font-weight: 700; }}
 QLabel#H3 {{ font-size: 10.5pt; font-weight: 700; }}
 QLabel#Muted, QLabel#Caption {{ color: {t.muted}; }}
 QLabel#Caption {{ font-size: 8.5pt; }}
-QLabel#StatValue {{ font-size: 17pt; font-weight: 700; }}
+QLabel#Latin {{ color: {t.muted}; font-style: italic; }}
+QLabel#StatValue {{ font-family: "Segoe UI Variable Display", "Segoe UI"; font-size: 19pt; font-weight: 700; color: {t.accent}; }}
 QLabel#Disclaimer {{
-    color: {t.muted}; font-size: 8.5pt; padding: 8px 10px;
-    border: 1px dashed {t.border}; border-radius: 8px;
+    color: {t.muted}; font-size: 8.5pt; padding: 10px 12px;
+    background: {t.surface2}; border-radius: 14px;
 }}
 QLabel#Banner {{
     background: {rgba(t.warn, 0.14)}; color: {t.warn}; border: 1px solid {rgba(t.warn, 0.45)};
-    border-radius: 10px; padding: 8px 12px; font-weight: 600;
+    border-radius: 14px; padding: 10px 14px; font-weight: 600;
 }}
-QLabel#Chip {{ border-radius: 10px; padding: 3px 10px; font-weight: 700; font-size: 8.5pt; }}
-QLabel#Chip[tone="ok"]     {{ background: {rgba(t.ok, 0.14)}; color: {t.ok}; }}
-QLabel#Chip[tone="warn"]   {{ background: {rgba(t.warn, 0.14)}; color: {t.warn}; }}
-QLabel#Chip[tone="danger"] {{ background: {rgba(t.danger, 0.14)}; color: {t.danger}; }}
+QLabel#Chip {{ border-radius: 9px; padding: 4px 12px; font-weight: 700; font-size: 8.5pt; }}
+QLabel#Chip[tone="ok"]     {{ background: {rgba(t.ok, 0.16)}; color: {t.ok}; }}
+QLabel#Chip[tone="warn"]   {{ background: {rgba(t.warn, 0.16)}; color: {t.warn}; }}
+QLabel#Chip[tone="danger"] {{ background: {rgba(t.danger, 0.15)}; color: {t.danger}; }}
 QLabel#Chip[tone="muted"]  {{ background: {t.surface2}; color: {t.muted}; }}
 
+/* ---------- buttons & inputs ---------- */
 QPushButton {{
-    background: {t.surface2}; border: 1px solid {t.border}; border-radius: 9px;
-    padding: 8px 16px; font-weight: 600;
+    background: {t.surface}; border: 1px solid {t.border}; border-radius: 15px;
+    padding: 9px 20px; font-weight: 600;
 }}
-QPushButton:hover {{ border-color: {t.accent}; }}
-QPushButton:disabled {{ color: {t.muted}; border-color: {t.border}; background: {t.surface}; }}
+QPushButton:hover {{ border-color: {t.accent}; color: {t.accent}; }}
+QPushButton:disabled {{ color: {t.muted}; border-color: {t.border}; background: {t.surface2}; }}
 QPushButton[primary="true"] {{ background: {t.accent}; color: {t.on_accent}; border: none; }}
-QPushButton[primary="true"]:hover {{ background: {t.accent_hover}; }}
+QPushButton[primary="true"]:hover {{ background: {t.accent_hover}; color: {t.on_accent}; }}
 QPushButton[primary="true"]:disabled {{ background: {t.border}; color: {t.muted}; }}
 QPushButton[flat="true"] {{ background: transparent; border: none; color: {t.muted}; padding: 6px 10px; }}
 QPushButton[flat="true"]:hover {{ color: {t.text}; }}
+QPushButton#ScanButton {{ font-size: 11pt; padding: 11px 28px; border-radius: 18px; }}
 
 QComboBox, QLineEdit {{
-    background: {t.surface2}; border: 1px solid {t.border}; border-radius: 8px; padding: 6px 10px;
+    background: {t.surface2}; border: 1px solid {t.border}; border-radius: 12px; padding: 8px 12px;
     selection-background-color: {t.accent}; selection-color: {t.on_accent};
 }}
 QComboBox:focus, QLineEdit:focus {{ border-color: {t.accent}; }}
-QComboBox::drop-down {{ border: none; width: 22px; }}
+QComboBox::drop-down {{ border: none; width: 24px; }}
 QComboBox QAbstractItemView {{
     background: {t.surface}; border: 1px solid {t.border}; selection-background-color: {t.surface2};
-    selection-color: {t.text}; outline: none;
+    selection-color: {t.text}; outline: none; padding: 4px;
 }}
+QCheckBox {{ spacing: 8px; }}
 
-QProgressBar {{ background: {t.surface2}; border: none; border-radius: 4px; height: 8px; }}
-QProgressBar::chunk {{ border-radius: 4px; background: {t.accent}; }}
+QProgressBar {{ background: {t.surface2}; border: none; border-radius: 5px; height: 10px; }}
+QProgressBar::chunk {{ border-radius: 5px; background: {t.accent}; }}
+QProgressBar[tone="ok"]::chunk {{ background: {t.accent}; }}
 QProgressBar[tone="warn"]::chunk {{ background: {t.warn}; }}
 QProgressBar[tone="danger"]::chunk {{ background: {t.danger}; }}
 
@@ -142,15 +170,15 @@ QScrollBar::add-line, QScrollBar::sub-line {{ height: 0; }}
 QScrollBar:horizontal {{ height: 0; }}
 
 QTableWidget {{
-    background: {t.surface}; border: none; gridline-color: transparent;
+    background: {t.surface}; border: none; gridline-color: transparent; border-radius: 20px;
     selection-background-color: {t.surface2}; selection-color: {t.text}; alternate-background-color: {t.surface};
 }}
-QTableWidget::item {{ padding: 4px; border-bottom: 1px solid {t.border}; }}
+QTableWidget::item {{ padding: 6px; border-bottom: 1px solid {t.border}; }}
 QHeaderView::section {{
     background: {t.surface}; color: {t.muted}; border: none; border-bottom: 1px solid {t.border};
-    padding: 8px 6px; font-weight: 600; font-size: 8.5pt;
+    padding: 10px 6px; font-weight: 600; font-size: 8.5pt;
 }}
-QStatusBar {{ background: {t.surface}; color: {t.muted}; border-top: 1px solid {t.border}; }}
+QStatusBar {{ background: {t.bg}; color: {t.muted}; border: none; }}
 QDialog {{ background: {t.bg}; }}
 """
 

@@ -135,7 +135,7 @@ class ResultPanel(QWidget):
         lay.addLayout(top)
         self.title = label("Scan a leaf", "H1", wrap=True)
         lay.addWidget(self.title)
-        self.subtitle = label("Hold one leaf against a plain background, then press Capture (Space) or import a photo.", "Muted", wrap=True)
+        self.subtitle = label("Hold one leaf in the middle of the frame and press Scan leaf (Space), or import a photo.", "Muted", wrap=True)
         lay.addWidget(self.subtitle)
 
         self.conf_row = QWidget()
@@ -215,7 +215,7 @@ class ResultPanel(QWidget):
         self._result = None
         self._set_chip("Ready", "muted")
         self.title.setText("Scan a leaf")
-        self.subtitle.setText("Hold one leaf against a plain background, then press Capture (Space) or import a photo.")
+        self.subtitle.setText("Hold one leaf in the middle of the frame and press Scan leaf (Space), or import a photo.")
         self.timing.setText("")
         self.conf_row.hide()
         self.guidance.hide()
@@ -310,7 +310,7 @@ class ResultPanel(QWidget):
             condition = info.condition if info else c.disease_name
             self._set_chip("Looks healthy" if healthy else "Possible disease", "ok" if healthy else "danger")
             self.title.setText(condition)
-            self.subtitle.setText(f"{c.plant} leaf")
+            self.subtitle.setText(self._plant_line(c.plant))
             self.plant_meter.set(f"Plant: {c.plant}", c.plant_confidence, _tone(c.plant_confidence))
             self.cond_meter.set(f"Condition: {condition}", c.confidence, _tone(c.confidence))
             self.cond_meter.show()
@@ -336,6 +336,10 @@ class ResultPanel(QWidget):
             self.save_note.setText("Enter a plant name first.")
             return
         self.save_requested.emit(name)
+
+    def _plant_line(self, plant: str) -> str:
+        info = self.labels.plant_info.get(plant)
+        return f"{plant} leaf  ·  {info.latin}" if info and info.latin else f"{plant} leaf"
 
     def _set_chip(self, text: str, tone: str) -> None:
         self.chip.setText(text)
