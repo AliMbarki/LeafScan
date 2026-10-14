@@ -164,6 +164,16 @@ class SqliteScanStore:
         )
         return {pred: n for pred, n in rows}
 
+    def daily_prediction_counts(self, plant_id: int | None = None) -> list[tuple[str, str, int]]:
+        """[(YYYY-MM-DD, prediction, count)] ordered by day."""
+        where, args = ("WHERE plant_id = ?", (plant_id,)) if plant_id is not None else ("", ())
+        rows = self.conn.execute(
+            f"""SELECT substr(timestamp, 1, 10) AS day, prediction, COUNT(*) FROM scans {where}
+                GROUP BY day, prediction ORDER BY day""",
+            args,
+        )
+        return [(d, p, n) for d, p, n in rows]
+
     def prediction_counts_by_plant(self) -> dict[str, dict[str, int]]:
         rows = self.conn.execute(
             """SELECT p.name, s.prediction, COUNT(*) FROM scans s JOIN plants p ON p.id = s.plant_id

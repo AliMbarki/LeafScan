@@ -7,6 +7,7 @@ __pycache__/
 data/raw/
 data/processed/
 data/app/
+data/demo/
 data/real_test/*
 !data/real_test/README.md
 # training checkpoints (final weights in models/ ARE committed)

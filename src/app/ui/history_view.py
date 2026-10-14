@@ -23,6 +23,7 @@ from PySide6.QtWidgets import (
 from app.contracts import StoredScan
 from app.labels import get_labels
 from app.storage.db import SqliteScanStore
+from app.ui.charts import ConditionsPerPlantChart, ScansOverTimeChart
 from app.ui.qt_utils import card, label, set_prop
 from app.ui.theme import DARK, Theme
 
@@ -106,6 +107,7 @@ class HistoryView(QWidget):
         self.t_scans = StatTile("Scans")
         self.t_plants = StatTile("Plants")
         self.t_top = StatTile("Most frequent result")
+        self.t_top.setToolTip("Most common confident result ('Not sure' scans are excluded)")
         self.t_last = StatTile("Last scan")
         for t in (self.t_scans, self.t_plants, self.t_top, self.t_last):
             tiles.addWidget(t, 1)
@@ -113,7 +115,7 @@ class HistoryView(QWidget):
 
         self.charts_row = QHBoxLayout()
         self.charts_row.setSpacing(12)
-        root.addLayout(self.charts_row, 3)
+        root.addLayout(self.charts_row, 4)
         self._build_charts()
 
         table_card, tl = card(margins=0, spacing=0)
@@ -144,23 +146,31 @@ class HistoryView(QWidget):
         bar.addWidget(self.open_btn)
         bar.addWidget(self.delete_btn)
         tl.addLayout(bar)
-        root.addWidget(table_card, 4)
+        root.addWidget(table_card, 5)
         self._update_buttons()
 
     # ---------------------------------------------------------------- charts
 
     def _build_charts(self) -> None:
-        """Phase 1 placeholder; replaced by real charts in Phase 4."""
-        for title in ("Scans over time", "Results per plant"):
-            c, lay = card()
+        self.time_chart = ScansOverTimeChart()
+        self.plant_chart = ConditionsPerPlantChart()
+        for title, sub, chart in (
+            ("Scans over time", "Last 30 days, by result", self.time_chart),
+            ("Conditions per plant", "How often each condition was found", self.plant_chart),
+        ):
+            c, lay = card(margins=14, spacing=2)
             lay.addWidget(label(title, "H3"))
-            ph = label("Charts arrive in Phase 4.", "Muted")
-            ph.setAlignment(Qt.AlignCenter)
-            lay.addWidget(ph, 1)
+            lay.addWidget(label(sub, "Caption"))
+            lay.addWidget(chart, 1)
             self.charts_row.addWidget(c, 1)
 
     def _update_charts(self, plant_id: int | None) -> None:
-        pass
+        self.time_chart.update_data(self.store.daily_prediction_counts(plant_id), self.labels, self.theme)
+        by_plant = self.store.prediction_counts_by_plant()
+        if plant_id is not None:
+            name = next((p.name for p in self.store.list_plants() if p.id == plant_id), None)
+            by_plant = {name: by_plant[name]} if name in by_plant else {}
+        self.plant_chart.update_data(by_plant, self.labels, self.theme)
 
     def set_theme(self, theme: Theme) -> None:
         self.theme = theme
@@ -213,11 +223,12 @@ class HistoryView(QWidget):
         self.t_scans.set(str(total), "for this plant" if plant_id else "across all plants")
         plants = self.store.list_plants()
         self.t_plants.set(str(len(plants)), "tracked")
-        if counts:
-            key, n = max(counts.items(), key=lambda kv: kv[1])
+        named = {k: n for k, n in counts.items() if self.labels.by_key(k) is not None}
+        if named:
+            key, n = max(named.items(), key=lambda kv: kv[1])
             self.t_top.set(f"{n}x", self.labels.display_name(key))
         else:
-            self.t_top.set("-", "no scans yet")
+            self.t_top.set("-", "no confident results yet" if counts else "no scans yet")
         if self._scans:
             last = self._scans[0]
             self.t_last.set(f"{last.timestamp:%b %d}", f"{last.timestamp:%H:%M} - {last.plant_name}")

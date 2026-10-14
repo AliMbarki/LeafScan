@@ -1,0 +1,215 @@
+{
+  "schema": 1,
+  "note": "General home-garden guidance written for LeafScan. Keys must match labels.json. Titles come from labels.json. Always check local extension advice and product labels.",
+  "classes": {
+    "pepper_bacterial_spot": {
+      "severity": "moderate",
+      "summary": "Bacterial spot is caused by Xanthomonas bacteria. It spreads in warm, wet weather through splashing water, handling wet plants, and infected seed or transplants. There is no cure for infected leaves; the goal is to slow the spread.",
+      "symptoms": [
+        "Small, dark, water-soaked spots on leaves that turn brown and may look angular",
+        "Spots sometimes have a yellow halo and can merge into larger dead patches",
+        "Yellowing and early leaf drop, which can leave fruit exposed to sunscald",
+        "Raised, rough, scab-like spots on fruit"
+      ],
+      "actions": [
+        "Remove badly spotted leaves and bag them; do not compost them",
+        "Avoid working among plants while the foliage is wet",
+        "Water at the base of the plant instead of overhead",
+        "Clean pruners and stakes with a disinfectant after handling affected plants",
+        "Copper-based sprays may slow the spread if started early; follow the product label and local rules"
+      ],
+      "prevention": [
+        "Use certified disease-free seed and healthy transplants",
+        "Choose resistant varieties where available",
+        "Rotate: avoid planting peppers or tomatoes in the same spot for 2-3 years",
+        "Remove plant debris at the end of the season"
+      ],
+      "sources": [
+        {"title": "Bacterial Spot of Pepper and Tomato", "publisher": "NC State Extension", "url": "https://content.ces.ncsu.edu/bacterial-spot-of-pepper-and-tomato"},
+        {"title": "Bacterial Spot - Peppers, Pest Management Guidelines", "publisher": "UC Statewide IPM Program", "url": "https://ipm.ucanr.edu/agriculture/peppers/bacterial-spot/"}
+      ]
+    },
+    "pepper_healthy": {
+      "severity": "none",
+      "summary": "No signs of the diseases this model knows about. Keep up good care and re-check regularly, including the undersides of leaves.",
+      "symptoms": [],
+      "actions": [
+        "Keep watering steady and at the base of the plant",
+        "Mulch to keep soil moisture even and reduce soil splash onto leaves",
+        "Check leaves weekly; early detection makes problems easier to manage"
+      ],
+      "prevention": [
+        "Give plants enough space for air to move between them",
+        "Rotate crop locations each year"
+      ],
+      "sources": [
+        {"title": "How to grow sweet peppers", "publisher": "RHS", "url": "https://www.rhs.org.uk/vegetables/peppers/grow-your-own"},
+        {"title": "Peppers - Pest Management Guidelines", "publisher": "UC Statewide IPM Program", "url": "https://ipm.ucanr.edu/agriculture/peppers/"}
+      ]
+    },
+    "potato_early_blight": {
+      "severity": "moderate",
+      "summary": "Early blight is a fungal disease (Alternaria) that usually starts on older, lower leaves and is worse on stressed plants in warm weather with heavy dew or rain. It weakens plants gradually rather than killing them quickly.",
+      "symptoms": [
+        "Dark brown spots with concentric rings, like a target, on older leaves",
+        "Spots often bordered by yellow tissue; affected leaves yellow and die",
+        "Damage moves upward through the plant over time",
+        "Tubers can develop dark, slightly sunken, dry lesions"
+      ],
+      "actions": [
+        "Remove heavily affected lower leaves and bag them",
+        "Water at the base, early in the day, so leaves dry quickly",
+        "Keep plants well fed and watered - stressed plants are more susceptible",
+        "Fungicides labelled for early blight can slow it; follow the label"
+      ],
+      "prevention": [
+        "Rotate: keep potatoes, tomatoes, peppers and eggplant out of the same bed for 2-3 years",
+        "Remove and destroy plant debris after harvest",
+        "Let tubers mature and handle them gently at harvest"
+      ],
+      "sources": [
+        {"title": "Early Blight - Potato, Pest Management Guidelines", "publisher": "UC Statewide IPM Program", "url": "https://ipm.ucanr.edu/agriculture/potato/early-blight/"}
+      ]
+    },
+    "potato_late_blight": {
+      "severity": "high",
+      "summary": "Late blight (Phytophthora infestans) spreads very quickly in cool, humid or wet weather and can destroy foliage within days. It also infects tubers and spreads to nearby tomatoes and potatoes, so act promptly.",
+      "symptoms": [
+        "Pale green to dark brown, water-soaked patches, often starting at leaf tips or edges",
+        "White, fuzzy growth on the underside of leaves in humid conditions",
+        "Dark lesions on stems; whole plants can collapse quickly",
+        "Tubers with reddish-brown, firm rot under the skin"
+      ],
+      "actions": [
+        "Remove and bag infected foliage or plants; do not compost them",
+        "Check nearby potatoes and tomatoes daily",
+        "If foliage is badly affected, remove it and wait before harvesting so tubers are less likely to be infected",
+        "Store only sound, undamaged tubers and check them during storage",
+        "Contact your local extension service - late blight outbreaks are often tracked regionally"
+      ],
+      "prevention": [
+        "Plant certified seed potatoes; never plant tubers saved from infected crops",
+        "Destroy volunteer potatoes and cull piles",
+        "Choose resistant varieties where available",
+        "Protective fungicides are used before infection in high-risk weather; follow the label"
+      ],
+      "sources": [
+        {"title": "Potato Late Blight", "publisher": "NC State Extension", "url": "https://content.ces.ncsu.edu/potato-late-blight"},
+        {"title": "Late Blight - Potato, Pest Management Guidelines", "publisher": "UC Statewide IPM Program", "url": "https://ipm.ucanr.edu/agriculture/potato/late-blight/"},
+        {"title": "Potato and tomato blight", "publisher": "RHS", "url": "https://www.rhs.org.uk/disease/potato-and-tomato-blight"}
+      ]
+    },
+    "potato_healthy": {
+      "severity": "none",
+      "summary": "No signs of the diseases this model knows about. Keep monitoring, especially during cool, wet spells when late blight can appear.",
+      "symptoms": [],
+      "actions": [
+        "Earth up (hill) soil around stems so tubers stay covered",
+        "Water evenly at the base of plants",
+        "Check leaves weekly, including undersides"
+      ],
+      "prevention": [
+        "Use certified seed potatoes",
+        "Rotate crop locations each year"
+      ],
+      "sources": [
+        {"title": "How to grow potatoes", "publisher": "RHS", "url": "https://www.rhs.org.uk/vegetables/potatoes/grow-your-own"},
+        {"title": "Potato - Pest Management Guidelines", "publisher": "UC Statewide IPM Program", "url": "https://ipm.ucanr.edu/agriculture/potato/"}
+      ]
+    },
+    "tomato_bacterial_spot": {
+      "severity": "moderate",
+      "summary": "Bacterial spot is caused by Xanthomonas bacteria and is favoured by warm, wet weather. It spreads by splashing water, handling wet plants and infected seed. Infected leaves cannot be cured; management focuses on slowing spread.",
+      "symptoms": [
+        "Small, dark, greasy-looking spots on leaves, often less than 3 mm across",
+        "Spots may have yellow halos and merge, causing leaves to yellow and drop",
+        "Small, raised, scabby spots on green fruit"
+      ],
+      "actions": [
+        "Remove badly affected leaves and bag them",
+        "Avoid overhead watering and don't handle plants when wet",
+        "Disinfect tools and stakes after use",
+        "Copper-based sprays may help slow spread if used early; follow the label"
+      ],
+      "prevention": [
+        "Start with disease-free seed and transplants",
+        "Rotate away from tomatoes and peppers for 2-3 years",
+        "Clear plant debris after the season"
+      ],
+      "sources": [
+        {"title": "Bacterial Spot of Pepper and Tomato", "publisher": "NC State Extension", "url": "https://content.ces.ncsu.edu/bacterial-spot-of-pepper-and-tomato"},
+        {"title": "Bacterial Spot - Tomato, Pest Management Guidelines", "publisher": "UC Statewide IPM Program", "url": "https://ipm.ucanr.edu/agriculture/tomato/bacterial-spot/"}
+      ]
+    },
+    "tomato_early_blight": {
+      "severity": "moderate",
+      "summary": "Early blight is a common fungal disease (Alternaria) that starts on the oldest leaves near the ground and moves upward. Warm, humid weather and soil splash help it spread.",
+      "symptoms": [
+        "Brown spots with concentric 'target' rings on lower, older leaves",
+        "Yellowing around the spots; affected leaves eventually die and drop",
+        "Dark lesions on stems, and leathery dark spots near the stem end of fruit"
+      ],
+      "actions": [
+        "Remove affected lower leaves and bag them",
+        "Mulch around plants to stop soil splashing onto leaves",
+        "Water at the base, ideally in the morning",
+        "Stake or cage plants and prune for air flow",
+        "Fungicides labelled for early blight can slow it; follow the label"
+      ],
+      "prevention": [
+        "Rotate tomatoes, potatoes, peppers and eggplant to a new bed for 2-3 years",
+        "Remove plant debris at season end",
+        "Choose tolerant varieties where available"
+      ],
+      "sources": [
+        {"title": "Early Blight of Tomato", "publisher": "NC State Extension", "url": "https://content.ces.ncsu.edu/early-blight-of-tomato"},
+        {"title": "Early Blight - Tomato, Pest Management Guidelines", "publisher": "UC Statewide IPM Program", "url": "https://ipm.ucanr.edu/agriculture/tomato/early-blight/"}
+      ]
+    },
+    "tomato_late_blight": {
+      "severity": "high",
+      "summary": "Late blight (Phytophthora infestans) can kill tomato plants within days in cool, wet or humid weather and spreads to nearby tomatoes and potatoes. Act quickly.",
+      "symptoms": [
+        "Large, irregular, pale green to dark brown, water-soaked patches on leaves",
+        "White fuzzy growth on leaf undersides when humid",
+        "Dark brown lesions on stems",
+        "Firm, greasy-looking brown patches on fruit"
+      ],
+      "actions": [
+        "Remove and bag infected plants or parts; do not compost them",
+        "Check neighbouring tomatoes and potatoes daily",
+        "Avoid wetting foliage when watering",
+        "Contact your local extension service - outbreaks are often tracked regionally"
+      ],
+      "prevention": [
+        "Buy healthy transplants and inspect them before planting",
+        "Choose late-blight-resistant varieties where available",
+        "Protective fungicides are used before infection in high-risk weather; follow the label"
+      ],
+      "sources": [
+        {"title": "Tomato Late Blight", "publisher": "NC State Extension", "url": "https://content.ces.ncsu.edu/tomato-late-blight"},
+        {"title": "Late Blight", "publisher": "Cornell Vegetables", "url": "https://www.vegetables.cornell.edu/pest-management/disease-factsheets/late-blight/"},
+        {"title": "Late Blight - Tomato, Pest Management Guidelines", "publisher": "UC Statewide IPM Program", "url": "https://ipm.ucanr.edu/agriculture/tomato/late-blight/"}
+      ]
+    },
+    "tomato_healthy": {
+      "severity": "none",
+      "summary": "No signs of the diseases this model knows about. Keep up good care and re-scan if new spots or yellowing appear.",
+      "symptoms": [],
+      "actions": [
+        "Water deeply and evenly at the base",
+        "Mulch to keep moisture even and reduce soil splash",
+        "Remove the lowest leaves that touch the soil",
+        "Check leaves weekly, including undersides"
+      ],
+      "prevention": [
+        "Stake or cage plants for air flow",
+        "Rotate crop locations each year"
+      ],
+      "sources": [
+        {"title": "How to grow tomatoes", "publisher": "RHS", "url": "https://www.rhs.org.uk/vegetables/tomatoes/grow-your-own"},
+        {"title": "Tomato - Home and Landscape", "publisher": "UC Statewide IPM Program", "url": "https://ipm.ucanr.edu/home-and-landscape/tomato/"}
+      ]
+    }
+  }
+}
