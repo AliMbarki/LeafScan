@@ -79,7 +79,8 @@ def parse_args(argv: list[str] | None) -> argparse.Namespace:
     p.add_argument("--plant-threshold", type=float, help="plant confidence below this is reported as 'not sure'")
     p.add_argument("--theme", choices=["dark", "light"])
     p.add_argument("--image", type=Path, help="analyse this image at startup")
-    p.add_argument("--page", choices=["scan", "history"], default="scan")
+    p.add_argument("--page", choices=["scan", "history", "video"], default="scan")
+    p.add_argument("--video", type=Path, help="open this video on the Video page at startup")
     p.add_argument("--screenshot", type=Path, help=argparse.SUPPRESS)  # dev: grab window and quit
     return p.parse_args(argv)
 
@@ -122,7 +123,9 @@ def main(argv: list[str] | None = None) -> int:
     win = MainWindow(settings, store, lambda: build_pipeline(settings))
     if args.theme:
         win.set_theme(args.theme)
-    win.show_page(1 if args.page == "history" else 0)
+    win.show_page({"scan": 0, "history": 1, "video": 2}["video" if args.video else args.page])
+    if args.video:
+        win.video_page.open_video(args.video)
     win.show()
 
     if args.image:
@@ -134,7 +137,9 @@ def main(argv: list[str] | None = None) -> int:
             if win.isVisible():
                 win.grab().save(str(args.screenshot))
                 win.close()
-        if args.image:
+        if args.video:
+            QTimer.singleShot(12000, _shot)
+        elif args.image:
             win.controller.finished.connect(lambda *_: QTimer.singleShot(600, _shot))
             win.controller.failed.connect(lambda *_: QTimer.singleShot(600, _shot))
             QTimer.singleShot(60000, _shot)

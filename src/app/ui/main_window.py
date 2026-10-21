@@ -114,8 +114,12 @@ class MainWindow(QMainWindow):
         self.stack = QStackedWidget()
         self.scan_page = ScanPage()
         self.history = HistoryView(store)
-        self.stack.addWidget(self.scan_page)
-        self.stack.addWidget(self.history)
+        from app.ui.video_page import VideoPage
+
+        self.video_page = VideoPage(settings)
+        self.stack.addWidget(self.scan_page)  # 0
+        self.stack.addWidget(self.history)  # 1
+        self.stack.addWidget(self.video_page)  # 2
         outer.addWidget(self.stack, 1)
         self.statusBar().showMessage("Loading model...")
 
@@ -176,7 +180,7 @@ class MainWindow(QMainWindow):
 
         self.nav_group = QButtonGroup(self)
         self.nav_group.setExclusive(True)
-        for i, text in enumerate(("◎   Scan", "▤   History")):
+        for i, text in ((0, "◎   Scan"), (2, "▶   Video"), (1, "▤   History")):
             b = QPushButton(text)
             b.setObjectName("NavButton")
             b.setCheckable(True)
@@ -235,6 +239,7 @@ class MainWindow(QMainWindow):
         self.prefs.setValue("theme", theme.name)
         self.theme_btn.setText("Light mode" if theme.name == "dark" else "Dark mode")
         self.scan_page.camera.set_theme(theme)
+        self.video_page.set_theme(theme)
         self.history.set_theme(theme)
 
     def toggle_theme(self) -> None:
@@ -397,6 +402,7 @@ class MainWindow(QMainWindow):
     # ---------------------------------------------------------------- close
 
     def closeEvent(self, event) -> None:
+        self.video_page.stop()
         if self._camera is not None:
             self._camera.stop()
         self.controller.shutdown()

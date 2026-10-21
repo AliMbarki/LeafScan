@@ -29,6 +29,14 @@ Options: `--no-camera`, `--camera 1`, `--image leaf.jpg`, `--theme light`, `--da
 Keys: **Space** capture, **Ctrl+O** import, **Ctrl+S** save, **Esc** back to live.
 Tip: one leaf in the middle of the frame, even light; a plain background gives the cleanest outline.
 
+## Video analysis
+
+The **Video** page opens a recorded video of plants (mp4, avi, mov, mkv...) and plays it while it:
+finds every leaf in the frame (several at once), classifies each one about 3 times per second, follows each
+leaf between frames so its label stays steady, and builds a verdict - **Illness detected / No illness
+detected / Not sure** - with a findings table (condition, when it was seen, max confidence) and guidance
+for the main problem. Pause, stop and seek with the slider. Start directly with `--video plants.mp4`.
+
 ## Model
 
 [`models/plant_disease.onnx`](models/plant_disease.onnx) (9 MB): MobileNetV2 fine-tuned on PlantVillage by

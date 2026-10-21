@@ -38,6 +38,43 @@ def load_image_file(path: str | Path) -> RGBImage:
     return validate_rgb(bgr_to_rgb(frame))
 
 
+VIDEO_FILE_FILTER = "Videos (*.mp4 *.avi *.mov *.mkv *.m4v *.wmv *.webm)"
+MAX_VIDEO_SIDE = 1280  # bigger frames are shrunk: faster analysis, no visible loss on screen
+
+
+class VideoSource:
+    """A video file read frame by frame as RGB."""
+
+    def __init__(self, path: str | Path) -> None:
+        self.path = Path(path)
+        self._cap = cv2.VideoCapture(str(self.path))
+        if not self._cap.isOpened():
+            self._cap.release()
+            raise InvalidImageError(f"{self.path.name} is not a readable video")
+        fps = self._cap.get(cv2.CAP_PROP_FPS)
+        self.fps = fps if 1 <= fps <= 240 else 25.0
+        self.frame_count = int(self._cap.get(cv2.CAP_PROP_FRAME_COUNT) or 0)
+        self.duration = self.frame_count / self.fps if self.frame_count > 0 else 0.0
+
+    def read(self) -> tuple[RGBImage | None, float]:
+        """Next frame (RGB) and its time in seconds; (None, t) at the end."""
+        ok, frame = self._cap.read()
+        t = self._cap.get(cv2.CAP_PROP_POS_MSEC) / 1000.0
+        if not ok or frame is None:
+            return None, t
+        h, w = frame.shape[:2]
+        if max(h, w) > MAX_VIDEO_SIDE:
+            s = MAX_VIDEO_SIDE / max(h, w)
+            frame = cv2.resize(frame, (round(w * s), round(h * s)), interpolation=cv2.INTER_AREA)
+        return bgr_to_rgb(frame), t
+
+    def seek(self, seconds: float) -> None:
+        self._cap.set(cv2.CAP_PROP_POS_MSEC, max(0.0, seconds) * 1000.0)
+
+    def close(self) -> None:
+        self._cap.release()
+
+
 def save_rgb_png(image: RGBImage, path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     ok, buf = cv2.imencode(".png", cv2.cvtColor(image, cv2.COLOR_RGB2BGR), [cv2.IMWRITE_PNG_COMPRESSION, 3])

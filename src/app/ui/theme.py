@@ -162,6 +162,13 @@ QProgressBar[tone="ok"]::chunk {{ background: {t.accent}; }}
 QProgressBar[tone="warn"]::chunk {{ background: {t.warn}; }}
 QProgressBar[tone="danger"]::chunk {{ background: {t.danger}; }}
 
+QSlider::groove:horizontal {{ height: 6px; background: {t.border}; border-radius: 3px; }}
+QSlider::sub-page:horizontal {{ background: {t.accent}; border-radius: 3px; }}
+QSlider::handle:horizontal {{
+    background: {t.surface}; border: 3px solid {t.accent}; width: 12px; height: 12px;
+    margin: -6px 0; border-radius: 9px;
+}}
+
 QScrollArea {{ background: transparent; border: none; }}
 QScrollArea > QWidget > QWidget {{ background: transparent; }}
 QScrollBar:vertical {{ background: transparent; width: 10px; margin: 2px; }}

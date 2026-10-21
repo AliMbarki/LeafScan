@@ -98,7 +98,8 @@ def parse_args(argv: list[str] | None) -> argparse.Namespace:
     p.add_argument("--plant-threshold", type=float, help="plant confidence below this is reported as 'not sure'")
     p.add_argument("--theme", choices=["dark", "light"])
     p.add_argument("--image", type=Path, help="analyse this image at startup")
-    p.add_argument("--page", choices=["scan", "history"], default="scan")
+    p.add_argument("--page", choices=["scan", "history", "video"], default="scan")
+    p.add_argument("--video", type=Path, help="open this video on the Video page at startup")
     p.add_argument("--screenshot", type=Path, help=argparse.SUPPRESS)  # dev: grab window and quit
     return p.parse_args(argv)
 
@@ -141,7 +142,9 @@ def main(argv: list[str] | None = None) -> int:
     win = MainWindow(settings, store, lambda: build_pipeline(settings))
     if args.theme:
         win.set_theme(args.theme)
-    win.show_page(1 if args.page == "history" else 0)
+    win.show_page({"scan": 0, "history": 1, "video": 2}["video" if args.video else args.page])
+    if args.video:
+        win.video_page.open_video(args.video)
     win.show()
 
     if args.image:
@@ -153,7 +156,9 @@ def main(argv: list[str] | None = None) -> int:
             if win.isVisible():
                 win.grab().save(str(args.screenshot))
                 win.close()
-        if args.image:
+        if args.video:
+            QTimer.singleShot(12000, _shot)
+        elif args.image:
             win.controller.finished.connect(lambda *_: QTimer.singleShot(600, _shot))
             win.controller.failed.connect(lambda *_: QTimer.singleShot(600, _shot))
             QTimer.singleShot(60000, _shot)
@@ -285,8 +290,12 @@ class MainWindow(QMainWindow):
         self.stack = QStackedWidget()
         self.scan_page = ScanPage()
         self.history = HistoryView(store)
-        self.stack.addWidget(self.scan_page)
-        self.stack.addWidget(self.history)
+        from app.ui.video_page import VideoPage
+
+        self.video_page = VideoPage(settings)
+        self.stack.addWidget(self.scan_page)  # 0
+        self.stack.addWidget(self.history)  # 1
+        self.stack.addWidget(self.video_page)  # 2
         outer.addWidget(self.stack, 1)
         self.statusBar().showMessage("Loading model...")
 
@@ -347,7 +356,7 @@ class MainWindow(QMainWindow):
 
         self.nav_group = QButtonGroup(self)
         self.nav_group.setExclusive(True)
-        for i, text in enumerate(("◎   Scan", "▤   History")):
+        for i, text in ((0, "◎   Scan"), (2, "▶   Video"), (1, "▤   History")):
             b = QPushButton(text)
             b.setObjectName("NavButton")
             b.setCheckable(True)
@@ -406,6 +415,7 @@ class MainWindow(QMainWindow):
         self.prefs.setValue("theme", theme.name)
         self.theme_btn.setText("Light mode" if theme.name == "dark" else "Dark mode")
         self.scan_page.camera.set_theme(theme)
+        self.video_page.set_theme(theme)
         self.history.set_theme(theme)
 
     def toggle_theme(self) -> None:
@@ -568,6 +578,7 @@ class MainWindow(QMainWindow):
     # ---------------------------------------------------------------- close
 
     def closeEvent(self, event) -> None:
+        self.video_page.stop()
         if self._camera is not None:
             self._camera.stop()
         self.controller.shutdown()
@@ -741,6 +752,13 @@ QProgressBar::chunk {{ border-radius: 5px; background: {t.accent}; }}
 QProgressBar[tone="ok"]::chunk {{ background: {t.accent}; }}
 QProgressBar[tone="warn"]::chunk {{ background: {t.warn}; }}
 QProgressBar[tone="danger"]::chunk {{ background: {t.danger}; }}
+
+QSlider::groove:horizontal {{ height: 6px; background: {t.border}; border-radius: 3px; }}
+QSlider::sub-page:horizontal {{ background: {t.accent}; border-radius: 3px; }}
+QSlider::handle:horizontal {{
+    background: {t.surface}; border: 3px solid {t.accent}; width: 12px; height: 12px;
+    margin: -6px 0; border-radius: 9px;
+}}
 
 QScrollArea {{ background: transparent; border: none; }}
 QScrollArea > QWidget > QWidget {{ background: transparent; }}
