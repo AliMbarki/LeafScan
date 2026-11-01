@@ -1,0 +1,100 @@
+LeafScan - Proof of Concept video (LeafScan_PoC_5min.mp4, 4:59)
+Voice-over script, timed to the video
+
+How to use it in ElevenLabs:
+- Generate each block below as its own clip (one block = one scene).
+- Place each clip at its start time in a video editor (CapCut, Clipchamp, Premiere...).
+- Each block is written to fit inside its scene at a normal speaking pace.
+- Lower the background music to about 15-20 % while the voice speaks.
+
+------------------------------------------------------------
+
+[0:00 - 0:08]  Title slide
+Hello! We are the LeafScan team, and this is our proof of concept: an app that recognises plant diseases from a leaf.
+
+[0:08 - 0:24]  Slide: The problem we address
+Plant diseases destroy a big part of crops every year. The first signs show on the leaves, but recognising them needs an expert. Our app gives you the plant, the disease and advice in under a second, fully offline.
+
+[0:24 - 0:42]  Slide: Technologies used
+The interface is built with PySide6. OpenCV handles the camera, videos and finding the leaf. The AI model is MobileNetV2, run with ONNX Runtime. NumPy does the image maths, SQLite stores the history, Matplotlib draws the charts, and pytest runs sixty-four tests.
+
+[0:42 - 0:58]  Slide: How a scan works
+First we get the image, and OpenCV finds the leaf. The AI model identifies the plant and the disease, our rules check the confidence, and the result is shown and can be saved. Everything heavy runs in the background, so the window never freezes.
+
+[0:58 - 1:03]  App: Scan page
+This is the Scan page. We can use the webcam or import a photo.
+
+[1:03 - 1:11]  App: tomato leaf imported
+Here's a tomato leaf. The app outlines it and finds early blight, with over ninety-nine percent confidence.
+
+[1:11 - 1:21]  App: advice card scrolling
+Below is the advice card: the symptoms, the steps to take, how to prevent it, and our sources.
+
+[1:21 - 1:27]  App: pink highlight off / on
+The pink areas show the parts of the leaf that aren't a healthy green.
+
+[1:27 - 1:31]  App: save scan
+One click saves the scan to the history.
+
+[1:31 - 1:45]  Slide: Step 1 - Finding the leaf
+Finding the leaf isn't AI, it's image processing with OpenCV. On a plain background we use colours, on a busy one an algorithm called GrabCut, and as a last option, the biggest green area.
+
+[1:45 - 1:55]  App: potato leaf
+A potato leaf, with late blight. The app marks it as a high-risk disease.
+
+[1:55 - 2:05]  App: bell pepper leaf
+This bell pepper leaf is healthy, so the result is shown in green.
+
+[2:05 - 2:12]  App: corn leaf
+A corn leaf, with common rust.
+
+[2:12 - 2:19]  App: grape leaf
+A grape leaf, with esca, also called black measles.
+
+[2:19 - 2:26]  App: apple leaf
+And an apple leaf, with cedar apple rust.
+
+[2:26 - 2:42]  Slide: Step 2 - The AI model
+We didn't train a model from zero. MobileNetV2 was already trained on fifty-four thousand leaf photos: fourteen plants and thirty-eight classes. It needs about fifty milliseconds per image, and below sixty percent confidence, it says "not sure".
+
+[2:42 - 2:51]  App: blurry, dark photo
+Like here: this photo is blurry and dark, so the app says "not sure" instead of guessing.
+
+[2:51 - 2:57]  App: Supported plants window
+This window lists the fourteen plants and their diseases.
+
+[2:57 - 3:02]  App: search "tomato"
+And we can search, for example, tomato.
+
+[3:02 - 3:14]  Slide: Step 3 - Video analysis
+Our newest feature is video analysis. The app finds every leaf in each frame, checks it three times per second, and follows it from frame to frame.
+
+[3:14 - 3:32]  App: video playing with labelled leaves
+Here, three leaves are found and labelled while the video plays. Red means a disease, green means healthy. A disease only counts after being seen at least twice, to avoid false alarms.
+
+[3:32 - 3:36]  App: verdict
+The verdict: illness detected.
+
+[3:36 - 3:44]  App: History page
+The History page shows every saved scan, with charts per day and per plant.
+
+[3:44 - 3:51]  App: filter by plant
+We can also filter by plant, like the tomato bed.
+
+[3:51 - 3:59]  App: dark mode
+And the app also has a dark mode.
+
+[3:59 - 4:15]  Slide: Results
+On clean lab photos, the app finds the right plant ninety-seven percent of the time, and the disease ninety-four percent. On real field photos it's weaker, because the model only learned from lab photos.
+
+[4:15 - 4:23]  App: busy scene without a leaf
+A limitation: with no single leaf in the picture, the scene can be misread.
+
+[4:23 - 4:38]  Slide: Limitations & next steps
+The model only knows fourteen plants and was trained on lab photos. Next, we want to train it on real field photos, add more plants, and build a mobile version.
+
+[4:38 - 4:52]  Slide: Who did what
+Hiba did the interface, Ali the camera, video and leaf detection, Rayan the AI model, Fadia the pipeline and decision rules, and Hamza the history, advice and tests.
+
+[4:52 - 4:59]  Slide: Thank you
+Thank you for watching! We're happy to answer your questions.

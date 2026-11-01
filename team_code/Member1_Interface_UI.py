@@ -1172,7 +1172,8 @@ class SupportedPlantsDialog(QDialog):
         lay.addWidget(label(f"{len(plants)} plants", "H2"))
         lay.addWidget(label(
             "LeafScan identifies these plants from a leaf photo and checks for the listed conditions. "
-            f"Leaves of other plants are reported as '{self.labels.unknown_name}'.", "Muted", wrap=True))
+            "Leaves of other plants are reported as 'Not sure' or matched to the closest known plant.",
+            "Muted", wrap=True))
         self.search = QLineEdit()
         self.search.setPlaceholderText("Filter, e.g. tomato or mildew")
         self.search.textChanged.connect(self._filter)
